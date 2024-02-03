@@ -16,7 +16,6 @@
 """
  
 import pygame
-#import pygame.sprite
  
 
 
@@ -29,10 +28,13 @@ RED = (255, 0, 0)
 pygame.init()
  
 # Set the width and height of the screen [width, height]
-size = (700, 500)
+size = (800, 500)
 screen = pygame.display.set_mode(size)
- 
 pygame.display.set_caption('Trac Game')
+bg_surf = pygame.image.load("art/card_table.jpg").convert_alpha()
+bg_surf = pygame.transform.smoothscale(bg_surf, (800,500))
+
+
  
 # Loop until the user clicks the close button.
 done = False
@@ -56,7 +58,7 @@ while not done:
  
     # If you want a background image, replace this clear with blit'ing the
     # background image.
-    screen.fill(WHITE)
+    screen.blit(bg_surf, (0,0))
  
     # --- Drawing code should go here
  
