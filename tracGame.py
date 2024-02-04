@@ -102,7 +102,6 @@ game_msg_rect = game_msg.get_rect(midbottom = (400, 330))
 roll_msg = text_font.render("Press space to roll dices", False, BLACK)
 roll_msg_rect = roll_msg.get_rect(midbottom = (400, 480))
 
-
 #Groups
 dice_group = pygame.sprite.Group()
 dice_group.add(Dice(1))
