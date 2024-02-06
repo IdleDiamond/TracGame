@@ -20,8 +20,39 @@ from random import randint
 
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, value):
         super().__init__()
+        self.value = value
+        self.isSelected = False
+        self.isUsed = False
+        tile = pygame.image.load(f'art/{value}.png').convert_alpha()
+        tile_selected = pygame.image.load(f'art/{value}sel.png').convert_alpha()
+        tile_used = pygame.image.load('art/used.png').convert_alpha()
+        self.tile_frame = (tile, tile_selected, tile_used)
+        self.image = self.tile_frame[0]
+        x = 10-value
+        self.rect = self.image.get_rect(center = ((x*82),120))
+    
+    def getIsSelected(self):
+        return self.isSelected
+    
+    def getValue(self):
+        return self.value
+    
+    def playerEvent(self):
+        pass
+    
+    def tileAnimation(self):
+        if self.isSelected:
+            self.image = self.tile_frame[1]
+        elif self.isUsed:
+            self.image = self.tile_frame[2]
+        else:
+            self.image = self.tile_frame[0]
+            
+    def update(self):
+        self.tileAnimation()
+    
         
 
 class Dice(pygame.sprite.Sprite):
@@ -75,6 +106,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+XY_MSG_BLOCK = (230, 335)
 
 GAME_ACTIVE = False
 ROLLING_DICE = False
@@ -101,14 +133,22 @@ game_msg_rect = game_msg.get_rect(midbottom = (400, 330))
 
 #Game screen
 roll_msg = msg_font.render("Press space to roll dices", False, BLACK)
-roll_msg_rect = roll_msg.get_rect(topleft = (230, 335))
+roll_msg_rect = roll_msg.get_rect(topleft = XY_MSG_BLOCK)
 msg_block = pygame.image.load("art/msg_block.png").convert_alpha()
 msg_block_rect = msg_block.get_rect(topleft = (200, 325))
 
-#Groups
+#Groups dice
 dice_group = pygame.sprite.Group()
 dice_group.add(Dice(1))
 dice_group.add(Dice(2))
+#9 Tiles
+tile_group = pygame.sprite.Group()
+#tile_group.add(Tile(9))
+
+i = 9
+while i > 0:
+    tile_group.add(Tile(i))
+    i -= 1
 
  
 # Loop until the user clicks the close button.
@@ -149,6 +189,7 @@ while not done:
         
         dice_group.update()
         dice_group.draw(screen)
+        tile_group.draw(screen)
         screen.blit(msg_block, msg_block_rect)
         screen.blit(roll_msg, roll_msg_rect)
         
