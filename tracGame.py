@@ -82,7 +82,8 @@ ROLLING_DICE = False
 
 pygame.init()
  
-text_font = pygame.font.Font(None, 80)
+title_font = pygame.font.Font(None, 80)
+msg_font = pygame.font.SysFont("garamond", 28)
 
 
 # Set the width and height of the screen [width, height]
@@ -93,14 +94,16 @@ bg_surf = pygame.image.load("art/card_table.jpg").convert_alpha()
 bg_surf = pygame.transform.smoothscale(bg_surf, size)
 
 #initial screen
-game_name = text_font.render("Trac Game", False, BLACK)
+game_name = title_font.render("Trac Game", False, BLACK)
 game_name_rect = game_name.get_rect(midbottom = (400,200))
-game_msg = text_font.render("Press space to start", True, BLACK)
+game_msg = title_font.render("Press space to start", True, BLACK)
 game_msg_rect = game_msg.get_rect(midbottom = (400, 330))
 
 #Game screen
-roll_msg = text_font.render("Press space to roll dices", False, BLACK)
-roll_msg_rect = roll_msg.get_rect(midbottom = (400, 480))
+roll_msg = msg_font.render("Press space to roll dices", False, BLACK)
+roll_msg_rect = roll_msg.get_rect(topleft = (230, 335))
+msg_block = pygame.image.load("art/msg_block.png").convert_alpha()
+msg_block_rect = msg_block.get_rect(topleft = (200, 325))
 
 #Groups
 dice_group = pygame.sprite.Group()
@@ -146,6 +149,7 @@ while not done:
         
         dice_group.update()
         dice_group.draw(screen)
+        screen.blit(msg_block, msg_block_rect)
         screen.blit(roll_msg, roll_msg_rect)
         
     else:
