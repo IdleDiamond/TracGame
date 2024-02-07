@@ -9,7 +9,15 @@ Created on Tue Feb  6 22:32:42 2024
 import pygame
 from random import randint
 
+FIRST_DICE_X = 160
+SECOND_DICE_X = 220
+DICES_Y = 410
+
+
 class Dice(pygame.sprite.Sprite):
+    
+
+    
     def __init__(self, diceNumber):
         super().__init__()
         dice_1 = pygame.image.load('art/dice_1.png').convert_alpha()
@@ -27,9 +35,9 @@ class Dice(pygame.sprite.Sprite):
 
         
         if self.diceNumber == 1:
-            self.rect = self.image.get_rect(midbottom = (80, 410))
+            self.rect = self.image.get_rect(midbottom = (FIRST_DICE_X, DICES_Y))
         else:
-            self.rect = self.image.get_rect(midbottom = (140, 410))
+            self.rect = self.image.get_rect(midbottom = (SECOND_DICE_X, DICES_Y))
         
     def show(self):
         self.image = self.frames[self.diceFace]

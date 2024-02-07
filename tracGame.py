@@ -25,7 +25,10 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
-XY_MSG_BLOCK = (230, 335)
+GAME_NAME_XY = (500,200)
+GAME_INIT_MSG_XY = (505, 330)
+MSG_POS_XY = (380, 335)
+MSG_BLOCK_XY = (350, 325)
 
 GAME_ACTIVE = False
 
@@ -36,7 +39,7 @@ msg_font = pygame.font.SysFont("garamond", 28)
 
 
 # Set the width and height of the screen [width, height]
-size = (800, 500)
+size = (1025, 500)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Trac Game')
 bg_surf = pygame.image.load("art/card_table.jpg").convert_alpha()
@@ -44,15 +47,15 @@ bg_surf = pygame.transform.smoothscale(bg_surf, size)
 
 #initial screen
 game_name = title_font.render("Trac Game", False, BLACK)
-game_name_rect = game_name.get_rect(midbottom = (400,200))
+game_name_rect = game_name.get_rect(midbottom = GAME_NAME_XY)
 game_msg = title_font.render("Press space to start", True, BLACK)
-game_msg_rect = game_msg.get_rect(midbottom = (400, 330))
+game_msg_rect = game_msg.get_rect(midbottom = GAME_INIT_MSG_XY)
 
 #Game screen
 roll_msg = msg_font.render("Press space to roll dices", False, BLACK)
-roll_msg_rect = roll_msg.get_rect(topleft = XY_MSG_BLOCK)
+roll_msg_rect = roll_msg.get_rect(topleft = MSG_POS_XY)
 msg_block = pygame.image.load("art/msg_block.png").convert_alpha()
-msg_block_rect = msg_block.get_rect(topleft = (200, 325))
+msg_block_rect = msg_block.get_rect(topleft = MSG_BLOCK_XY)
 
 #Groups dice
 dice_group = pygame.sprite.Group()
@@ -85,10 +88,13 @@ while not done:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             #player press SPACE to roll dices
             if GAME_ACTIVE:
+                ##########
+                #if 1st time, remove text in msg_block
                 pygame.time.set_timer(rollTimer, 1000)
                 for dice in dice_group:
                     dice.setRolling(True)
-                    dice.roll()     
+                    dice.roll()
+                    #checks value and face number
                     #print(f"Dice {dice.getDiceNumber()} : value {dice.getDiceFace()}")
                     
             else:
