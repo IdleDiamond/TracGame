@@ -25,12 +25,18 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+
+#Constant position
 GAME_NAME_XY = (500,200)
 GAME_INIT_MSG_XY = (505, 330)
 MSG_POS_XY = (380, 335)
 MSG_BLOCK_XY = (350, 325)
 
+#Booleans
 GAME_ACTIVE = False
+FIRST_ROLL = True
+# Loop until the user clicks the close button.
+GAME_DONE = False
 
 pygame.init()
  
@@ -61,17 +67,13 @@ msg_block_rect = msg_block.get_rect(topleft = MSG_BLOCK_XY)
 dice_group = pygame.sprite.Group()
 dice_group.add(Dice(1))
 dice_group.add(Dice(2))
+
 #9 Tiles, create tile group sprite
 tile_group = pygame.sprite.Group()
-
 i = 9
 while i > 0:
     tile_group.add(Tile(i))
     i -= 1
-
- 
-# Loop until the user clicks the close button.
-done = False
  
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
@@ -79,17 +81,19 @@ clock = pygame.time.Clock()
 rollTimer = pygame.USEREVENT + 1
  
 # -------- Main Program Loop -----------
-while not done:
+while not GAME_DONE:
     # --- Main event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True
+            GAME_DONE = True
         
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             #player press SPACE to roll dices
             if GAME_ACTIVE:
-                ##########
-                #if 1st time, remove text in msg_block
+
+                if FIRST_ROLL:
+                    FIRST_ROLL = False
+                    
                 pygame.time.set_timer(rollTimer, 1000)
                 for dice in dice_group:
                     dice.setRolling(True)
@@ -116,7 +120,8 @@ while not done:
         dice_group.draw(screen)
         tile_group.draw(screen)
         screen.blit(msg_block, msg_block_rect)
-        screen.blit(roll_msg, roll_msg_rect)
+        if FIRST_ROLL:
+            screen.blit(roll_msg, roll_msg_rect)
         
     else:
         screen.blit(game_name, game_name_rect)
