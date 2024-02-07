@@ -16,90 +16,9 @@
 """
  
 import pygame
-from random import randint
-
-
-class Tile(pygame.sprite.Sprite):
-    def __init__(self, value):
-        super().__init__()
-        self.value = value
-        self.isSelected = False
-        self.isUsed = False
-        tile = pygame.image.load(f'art/{value}.png').convert_alpha()
-        tile_selected = pygame.image.load(f'art/{value}sel.png').convert_alpha()
-        tile_used = pygame.image.load('art/used.png').convert_alpha()
-        self.tile_frame = (tile, tile_selected, tile_used)
-        self.image = self.tile_frame[0]
-        x = 10-value
-        self.rect = self.image.get_rect(center = ((x*82),120))
-    
-    def getIsSelected(self):
-        return self.isSelected
-    
-    def getValue(self):
-        return self.value
-    
-    def playerEvent(self):
-        pass
-    
-    def tileAnimation(self):
-        if self.isSelected:
-            self.image = self.tile_frame[1]
-        elif self.isUsed:
-            self.image = self.tile_frame[2]
-        else:
-            self.image = self.tile_frame[0]
-            
-    def update(self):
-        self.tileAnimation()
-    
-        
-
-class Dice(pygame.sprite.Sprite):
-    def __init__(self, diceNumber):
-        super().__init__()
-        dice_1 = pygame.image.load('art/dice_1.png').convert_alpha()
-        dice_2 = pygame.image.load('art/dice_2.png').convert_alpha()
-        dice_3 = pygame.image.load('art/dice_3.png').convert_alpha()
-        dice_4 = pygame.image.load('art/dice_4.png').convert_alpha()
-        dice_5 = pygame.image.load('art/dice_5.png').convert_alpha()
-        dice_6 = pygame.image.load('art/dice_6.png').convert_alpha()
-        
-        self.diceFace = 0
-        self.diceNumber = diceNumber
-        self.frames = (dice_1, dice_2, dice_3, dice_4, dice_5, dice_6)
-        self.image = self.frames[self.diceFace]
-
-        
-        if self.diceNumber == 1:
-            self.rect = self.image.get_rect(midbottom = (80, 410))
-        else:
-            self.rect = self.image.get_rect(midbottom = (140, 410))
-        
-    def show(self):
-        self.image = self.frames[self.diceFace]
-        
-    def roll(self):
-        #Result from rolling the diec
-        self.diceFace = randint(0,5)
-        
-    def player_event(self):
-        pass
-    
-    def getDiceFace(self):
-        return self.diceFace + 1
-    
-    def dice_animation(self):
-        if ROLLING_DICE:
-            rolling_face = randint(0,5)
-            self.image = self.frames[rolling_face]
-        else:
-            self.show()
-        
-    def update(self):
-        self.player_event()
-        self.dice_animation()
-        
+from lib.dice import Dice
+from lib.tile import Tile
+     
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -109,8 +28,6 @@ RED = (255, 0, 0)
 XY_MSG_BLOCK = (230, 335)
 
 GAME_ACTIVE = False
-ROLLING_DICE = False
-
 
 pygame.init()
  
@@ -141,9 +58,8 @@ msg_block_rect = msg_block.get_rect(topleft = (200, 325))
 dice_group = pygame.sprite.Group()
 dice_group.add(Dice(1))
 dice_group.add(Dice(2))
-#9 Tiles
+#9 Tiles, create tile group sprite
 tile_group = pygame.sprite.Group()
-#tile_group.add(Tile(9))
 
 i = 9
 while i > 0:
@@ -170,16 +86,19 @@ while not done:
             #player press SPACE to roll dices
             if GAME_ACTIVE:
                 pygame.time.set_timer(rollTimer, 1000)
-                ROLLING_DICE = True
                 for dice in dice_group:
+                    dice.setRolling(True)
                     dice.roll()     
+                    #print(f"Dice {dice.getDiceNumber()} : value {dice.getDiceFace()}")
+                    
             else:
                 #player started game
                 GAME_ACTIVE = True
         
         if event.type == rollTimer:
             #stop rolling dices
-            ROLLING_DICE = False
+            for dice in dice_group:
+                dice.setRolling(False)
         
     #table background
     screen.blit(bg_surf, (0,0))
