@@ -27,10 +27,11 @@ class Tile(pygame.sprite.Sprite):
         cardIndex = 10-value
         self.rect = self.image.get_rect(midleft = (TILE_X_POS+(110*(cardIndex-1)),TILE_Y_POS))
 
-        
+    
     def getIsSelected(self):
         return self.isSelected
     
+    #not used yet 
     def setIsSelected(self, value):
         self.isSelected = value
         
@@ -41,16 +42,13 @@ class Tile(pygame.sprite.Sprite):
             else:
                 self.isSelected = True
     
+    #not used yet
     def getIsUsed(self):
         return self.isUsed
     
     def getValue(self):
         return self.value
-    
-    #continue this method
-    def playerEvent(self):
-        pass
-    
+       
     def tileAnimation(self):
         if self.isSelected:
             self.image = self.tile_frame[1]
