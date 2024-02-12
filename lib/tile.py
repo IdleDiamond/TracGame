@@ -26,19 +26,23 @@ class Tile(pygame.sprite.Sprite):
         self.image = self.tile_frame[0]
         cardIndex = 10-value
         self.rect = self.image.get_rect(midleft = (TILE_X_POS+(110*(cardIndex-1)),TILE_Y_POS))
-        
-        """
-        if cardIndex == 1:
-            self.rect = self.image.get_rect(midleft = (21,130))
-            print(self.rect.midleft)
-        else:
-            self.rect = self.image.get_rect(midleft = (21+(110*(cardIndex-1)),130))
-            if cardIndex == 9:
-                print(self.rect.midright)
-        """
+
         
     def getIsSelected(self):
         return self.isSelected
+    
+    def setIsSelected(self, value):
+        self.isSelected = value
+        
+    def isClicked(self):
+        if not self.isUsed:
+            if self.isSelected:
+                self.isSelected = False
+            else:
+                self.isSelected = True
+    
+    def getIsUsed(self):
+        return self.isUsed
     
     def getValue(self):
         return self.value
@@ -55,5 +59,8 @@ class Tile(pygame.sprite.Sprite):
         else:
             self.image = self.tile_frame[0]
             
+    def checkCollision(self, pos):
+        return self.rect.collidepoint(pos)
+        
     def update(self):
         self.tileAnimation()

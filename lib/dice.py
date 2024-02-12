@@ -4,6 +4,8 @@
 Created on Tue Feb  6 22:32:42 2024
 
 @author: joaking
+
+Dice pixelart by JamesWhite
 """
 
 import pygame

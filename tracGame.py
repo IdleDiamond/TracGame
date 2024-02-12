@@ -109,6 +109,12 @@ while not GAME_DONE:
             #stop rolling dices
             for dice in dice_group:
                 dice.setRolling(False)
+                
+        if GAME_ACTIVE:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for tile in tile_group:
+                    if tile.checkCollision(pygame.mouse.get_pos()):
+                        tile.isClicked()
         
     #table background
     screen.blit(bg_surf, (0,0))
@@ -117,6 +123,7 @@ while not GAME_DONE:
     if GAME_ACTIVE:
         
         dice_group.update()
+        tile_group.update()
         dice_group.draw(screen)
         tile_group.draw(screen)
         screen.blit(msg_block, msg_block_rect)
