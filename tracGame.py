@@ -31,10 +31,12 @@ GAME_NAME_XY = (500,200)
 GAME_INIT_MSG_XY = (505, 330)
 MSG_POS_XY = (380, 335)
 MSG_BLOCK_XY = (350, 325)
+INFO_BOX_XY = (995,30)
 
 #Booleans
 GAME_ACTIVE = False
 FIRST_ROLL = True
+DICE_ROLLING = False
 # Loop until the user clicks the close button.
 GAME_DONE = False
 
@@ -56,6 +58,10 @@ game_name = title_font.render("Trac Game", False, BLACK)
 game_name_rect = game_name.get_rect(midbottom = GAME_NAME_XY)
 game_msg = title_font.render("Press space to start", True, BLACK)
 game_msg_rect = game_msg.get_rect(midbottom = GAME_INIT_MSG_XY)
+
+#info button
+info_box = pygame.image.load("art/info_box.png").convert_alpha()
+info_box_rect = info_box.get_rect(center = INFO_BOX_XY)
 
 #Game screen
 roll_msg = msg_font.render("Press space to roll dices", False, BLACK)
@@ -95,6 +101,7 @@ while not GAME_DONE:
                     FIRST_ROLL = False
                     
                 pygame.time.set_timer(rollTimer, 1000)
+                DICE_ROLLING = True
                 for dice in dice_group:
                     dice.setRolling(True)
                     dice.roll()
@@ -107,11 +114,17 @@ while not GAME_DONE:
         
         if event.type == rollTimer:
             #stop rolling dices
+            DICE_ROLLING = False
             for dice in dice_group:
                 dice.setRolling(False)
                 
         if GAME_ACTIVE:
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if not DICE_ROLLING:
+                    if info_box_rect.collidepoint(pygame.mouse.get_pos()):
+                        #put code in method that reset all game information
+                        FIRST_ROLL = True
+                    
                 for tile in tile_group:
                     if tile.checkCollision(pygame.mouse.get_pos()):
                         tile.isClicked()
@@ -127,6 +140,7 @@ while not GAME_DONE:
         dice_group.draw(screen)
         tile_group.draw(screen)
         screen.blit(msg_block, msg_block_rect)
+        screen.blit(info_box,info_box_rect)
         if FIRST_ROLL:
             screen.blit(roll_msg, roll_msg_rect)
         
