@@ -27,18 +27,15 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 #Constant position
-GAME_NAME_XY = (500,200)
-GAME_INIT_MSG_XY = (505, 330)
 MSG_POS_XY = (380, 335)
 MSG_BLOCK_XY = (350, 325)
 INFO_BOX_XY = (995,30)
 
 #Booleans
-GAME_ACTIVE = False
-FIRST_ROLL = True
-DICE_ROLLING = False
+boolFirstRoll = True
+boolDiceRolling = False
 # Loop until the user clicks the close button.
-GAME_DONE = False
+boolGameDone = False
 
 pygame.init()
  
@@ -53,11 +50,6 @@ pygame.display.set_caption('Trac Game')
 bg_surf = pygame.image.load("art/card_table.jpg").convert_alpha()
 bg_surf = pygame.transform.smoothscale(bg_surf, size)
 
-#initial screen
-game_name = title_font.render("Trac Game", False, BLACK)
-game_name_rect = game_name.get_rect(midbottom = GAME_NAME_XY)
-game_msg = title_font.render("Press space to start", True, BLACK)
-game_msg_rect = game_msg.get_rect(midbottom = GAME_INIT_MSG_XY)
 
 #info button
 info_box = pygame.image.load("art/info_box.png").convert_alpha()
@@ -87,67 +79,56 @@ clock = pygame.time.Clock()
 rollTimer = pygame.USEREVENT + 1
  
 # -------- Main Program Loop -----------
-while not GAME_DONE:
+while not boolGameDone:
     # --- Main event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            GAME_DONE = True
+            boolGameDone = True
         
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            #player press SPACE to roll dices
-            if GAME_ACTIVE:
-
-                if FIRST_ROLL:
-                    FIRST_ROLL = False
+            if not boolDiceRolling:
+                #player press SPACE to roll dices
+                if boolFirstRoll:
+                    boolFirstRoll = False
                     
                 pygame.time.set_timer(rollTimer, 1000)
-                DICE_ROLLING = True
+                boolDiceRolling = True
                 for dice in dice_group:
                     dice.setRolling(True)
                     dice.roll()
                     #checks value and face number
                     #print(f"Dice {dice.getDiceNumber()} : value {dice.getDiceFace()}")
-                    
-            else:
-                #player started game
-                GAME_ACTIVE = True
+
         
         if event.type == rollTimer:
             #stop rolling dices
-            DICE_ROLLING = False
+            boolDiceRolling = False
             for dice in dice_group:
                 dice.setRolling(False)
                 
-        if GAME_ACTIVE:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if not DICE_ROLLING:
-                    if info_box_rect.collidepoint(pygame.mouse.get_pos()):
-                        #put code in method that reset all game information
-                        FIRST_ROLL = True
-                    
-                for tile in tile_group:
-                    if tile.checkCollision(pygame.mouse.get_pos()):
-                        tile.isClicked()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if not boolDiceRolling:
+                if info_box_rect.collidepoint(pygame.mouse.get_pos()):
+                    #put code in method that reset all game information
+                    boolFirstRoll = True
+                
+            for tile in tile_group:
+                if tile.checkCollision(pygame.mouse.get_pos()):
+                    tile.isClicked()
         
     #table background
     screen.blit(bg_surf, (0,0))
  
-    #different game screens
-    if GAME_ACTIVE:
         
-        dice_group.update()
-        tile_group.update()
-        dice_group.draw(screen)
-        tile_group.draw(screen)
-        screen.blit(msg_block, msg_block_rect)
-        screen.blit(info_box,info_box_rect)
-        if FIRST_ROLL:
-            screen.blit(roll_msg, roll_msg_rect)
-        
-    else:
-        screen.blit(game_name, game_name_rect)
-        screen.blit(game_msg, game_msg_rect)
- 
+    dice_group.update()
+    tile_group.update()
+    dice_group.draw(screen)
+    tile_group.draw(screen)
+    screen.blit(msg_block, msg_block_rect)
+    screen.blit(info_box,info_box_rect)
+    if boolFirstRoll:
+        screen.blit(roll_msg, roll_msg_rect)
+
  
     # --- Drawing code should go here
  
