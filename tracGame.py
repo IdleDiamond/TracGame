@@ -34,12 +34,15 @@ INFO_BOX_XY = (995,30)
 #Booleans
 boolFirstRoll = True
 boolDiceRolling = False
-# Loop until the user clicks the close button.
 boolGameDone = False
+boolPlayerTurn = False
+
+#variables
+diceResult = 0
 
 pygame.init()
  
-title_font = pygame.font.Font(None, 80)
+#title_font = pygame.font.Font(None, 80)
 msg_font = pygame.font.SysFont("garamond", 28)
 
 
@@ -50,7 +53,6 @@ pygame.display.set_caption('Trac Game')
 bg_surf = pygame.image.load("art/card_table.jpg").convert_alpha()
 bg_surf = pygame.transform.smoothscale(bg_surf, size)
 
-
 #info button
 info_box = pygame.image.load("art/info_box.png").convert_alpha()
 info_box_rect = info_box.get_rect(center = INFO_BOX_XY)
@@ -60,6 +62,8 @@ roll_msg = msg_font.render("Press space to roll dices", False, BLACK)
 roll_msg_rect = roll_msg.get_rect(topleft = MSG_POS_XY)
 msg_block = pygame.image.load("art/msg_block.png").convert_alpha()
 msg_block_rect = msg_block.get_rect(topleft = MSG_BLOCK_XY)
+dice_result = msg_font.render(f"{diceResult}", False, BLACK)
+dice_result_rect = dice_result.get_rect(topleft = MSG_POS_XY)
 
 #Groups dice
 dice_group = pygame.sprite.Group()
@@ -86,36 +90,40 @@ while not boolGameDone:
             boolGameDone = True
         
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            if not boolDiceRolling:
-                #player press SPACE to roll dices
-                if boolFirstRoll:
-                    boolFirstRoll = False
-                    
-                pygame.time.set_timer(rollTimer, 1000)
-                boolDiceRolling = True
-                for dice in dice_group:
-                    dice.setRolling(True)
-                    dice.roll()
-                    #checks value and face number
-                    #print(f"Dice {dice.getDiceNumber()} : value {dice.getDiceFace()}")
+            if not boolPlayerTurn:
+                if not boolDiceRolling:
+                    #player press SPACE to roll dices
+                    if boolFirstRoll:
+                        boolFirstRoll = False
+                        
+                    pygame.time.set_timer(rollTimer, 1000, 1)
+                    boolDiceRolling = True
+                    boolPlayerTurn = True
+                    for dice in dice_group:
+                        dice.setRolling(True)
+                        dice.roll()
 
-        
         if event.type == rollTimer:
             #stop rolling dices
             boolDiceRolling = False
             for dice in dice_group:
                 dice.setRolling(False)
+                diceResult += dice.getDiceFace()
+            dice_result = msg_font.render(f"{diceResult}", False, BLACK)
                 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if not boolDiceRolling:
                 if info_box_rect.collidepoint(pygame.mouse.get_pos()):
                     #put code in method that reset all game information
-                    boolFirstRoll = True
-                
-            for tile in tile_group:
-                if tile.checkCollision(pygame.mouse.get_pos()):
-                    tile.isClicked()
+                    #boolFirstRoll = True
+                    pass
+                    
+            if boolPlayerTurn:
+                for tile in tile_group:
+                    if tile.checkCollision(pygame.mouse.get_pos()):
+                        tile.isClicked()
         
+
     #table background
     screen.blit(bg_surf, (0,0))
  
@@ -128,6 +136,9 @@ while not boolGameDone:
     screen.blit(info_box,info_box_rect)
     if boolFirstRoll:
         screen.blit(roll_msg, roll_msg_rect)
+    if diceResult != 0:
+        dice_result_rect = dice_result.get_rect(topleft = MSG_POS_XY)
+        screen.blit(dice_result, dice_result_rect)
 
  
     # --- Drawing code should go here
