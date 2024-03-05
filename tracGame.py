@@ -14,11 +14,14 @@
  
  Explanation video: http://youtu.be/vRB_983kUMc
 """
- 
+
+#pylint: disable=invalid-name
+#pylint: disable=no-member
+
 import pygame
 from lib.dice import Dice
 from lib.tile import Tile
-     
+
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -32,16 +35,16 @@ MSG_BLOCK_XY = (350, 325)
 INFO_BOX_XY = (995,30)
 
 #Booleans
-boolFirstRoll = True
-boolDiceRolling = False
-boolGameDone = False
-boolPlayerTurn = False
+isFirstRoll = True
+isDiceRolling = False
+isGameDone = False
+isPlayerTurn = False
 
 #variables
 diceResult = 0
 
 pygame.init()
- 
+
 #title_font = pygame.font.Font(None, 80)
 msg_font = pygame.font.SysFont("garamond", 28)
 
@@ -76,78 +79,81 @@ i = 9
 while i > 0:
     tile_group.add(Tile(i))
     i -= 1
- 
+
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
 rollTimer = pygame.USEREVENT + 1
- 
+
 # -------- Main Program Loop -----------
-while not boolGameDone:
+while not isGameDone:
     # --- Main event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            boolGameDone = True
-        
+            isGameDone = True
+
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            if not boolPlayerTurn:
-                if not boolDiceRolling:
+            if not isPlayerTurn:
+                if not isDiceRolling:
                     #player press SPACE to roll dices
-                    if boolFirstRoll:
-                        boolFirstRoll = False
-                        
+                    if isFirstRoll:
+                        isFirstRoll = False
+
                     pygame.time.set_timer(rollTimer, 1000, 1)
-                    boolDiceRolling = True
-                    boolPlayerTurn = True
+                    isDiceRolling = True
+                    isPlayerTurn = True
                     for dice in dice_group:
                         dice.setRolling(True)
                         dice.roll()
 
         if event.type == rollTimer:
             #stop rolling dices
-            boolDiceRolling = False
+            isDiceRolling = False
             for dice in dice_group:
                 dice.setRolling(False)
                 diceResult += dice.getDiceFace()
             dice_result = msg_font.render(f"{diceResult}", False, BLACK)
-                
+
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if not boolDiceRolling:
+            if not isDiceRolling:
                 if info_box_rect.collidepoint(pygame.mouse.get_pos()):
                     #put code in method that reset all game information
-                    #boolFirstRoll = True
+                    #isFirstRoll = True
                     pass
-                    
-            if boolPlayerTurn:
-                for tile in tile_group:
+
+            if isPlayerTurn:
+                for count, tile in enumerate(tile_group, 1):
                     if tile.checkCollision(pygame.mouse.get_pos()):
                         tile.isClicked()
-        
+
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            print("return")
+
 
     #table background
     screen.blit(bg_surf, (0,0))
- 
-        
+
+
     dice_group.update()
     tile_group.update()
     dice_group.draw(screen)
     tile_group.draw(screen)
     screen.blit(msg_block, msg_block_rect)
     screen.blit(info_box,info_box_rect)
-    if boolFirstRoll:
+    if isFirstRoll:
         screen.blit(roll_msg, roll_msg_rect)
     if diceResult != 0:
         dice_result_rect = dice_result.get_rect(topleft = MSG_POS_XY)
         screen.blit(dice_result, dice_result_rect)
 
- 
+
     # --- Drawing code should go here
- 
+
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
- 
+
     # --- Limit to 60 frames per second
     clock.tick(60)
- 
+
 # Close the window and quit.
 pygame.quit()
