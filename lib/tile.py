@@ -44,18 +44,21 @@ class Tile(pygame.sprite.Sprite):
             else:
                 self.isSelected = True
 
-    #not used yet
+
     def getIsUsed(self):
         return self.isUsed
+    
+    def setIsUsed(self, value):
+        self.isUsed = value
 
     def getValue(self):
         return self.value
 
     def tileAnimation(self):
-        if self.isSelected:
-            self.image = self.tile_frame[1]
-        elif self.isUsed:
+        if self.isUsed:
             self.image = self.tile_frame[2]
+        elif self.isSelected:
+            self.image = self.tile_frame[1]
         else:
             self.image = self.tile_frame[0]
 

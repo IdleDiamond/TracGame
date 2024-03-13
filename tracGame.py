@@ -42,6 +42,7 @@ isPlayerTurn = False
 
 #variables
 diceResult = 0
+tilesInPlay = {1,2,3,4,5,6,7,8,9}
 
 pygame.init()
 
@@ -127,7 +128,27 @@ while not isGameDone:
                         tile.isClicked()
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-            print("return")
+            if isPlayerTurn:
+                tileSelection = []
+                sumSelected = 0
+                for count, tile in enumerate(tile_group):
+                    if not tile.getIsUsed():
+                        if (tile.getIsSelected()):
+                            # print(f"Value {tile.getValue()}")
+                            tileSelection.append(tile)
+                            sumSelected += tile.getValue()
+                
+                if sumSelected == diceResult:
+                    # print("same amount")
+                    for count, tile in enumerate(tileSelection):
+                        tile.setIsUsed(True)
+                        tilesInPlay.discard(tile.getValue())
+                        
+                    isPlayerTurn = False
+                    diceResult = 0
+                    #print(tilesInPlay)
+                    
+                    
 
 
     #table background
