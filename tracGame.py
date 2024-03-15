@@ -23,6 +23,35 @@ from lib.dice import Dice
 from lib.tile import Tile
 
 
+def checkGameEnd():
+    """Checks if with dice result the game is still possible"""
+    
+    
+    POSSIBILITY_DICT = {12: [{9,3}, {9,2,1}, {8,4}, {8,3,1}, {7,5}, {7,3,2}, {7,4,1}, {6,5,1}, {6,4,2}, {6,3,2,1}, {5,4,3}],
+                       11: [{9,2}, {8,3}, {8,2,1}, {7,4}, {7,3,1}, {6,5}, {6,4,1}, {6,3,2}, {5,4,2}, {5,3,2,1}],
+                       10: [{9,1}, {8,2}, {7,3}, {7,2,1}, {6,4}, {6,3,1}, {5,4,1}, {5,3,2}, {4,3,2,1}],
+                       9: [{9}, {8,1}, {7,2}, {6,3}, {6,2,1}, {5,4}, {5,3,1}, {4,3,2}],
+                       8: [{8}, {7,1}, {6,2}, {5,3}, {5,2,1}, {4,3,1}],
+                       7: [{7}, {6,1}, {5,2}, {4,3}, {4,2,1}],
+                       6: [{6}, {5,1}, {4,2}, {3,2,1}],
+                       5: [{5}, {4,1}, {3,2}],
+                       4: [{4}, {3,1}],
+                       3: [{3}, {2,1}],
+                       2: [{2}],
+                       1: [{1}]}
+    
+    isGameImpossible = True
+    posList = POSSIBILITY_DICT[diceResult]
+    
+    
+    for count, setPos in enumerate(posList):
+        
+        if setPos.issubset(set(tilesInPlay)):
+            isGameImpossible = False
+    
+    return isGameImpossible
+
+
 # Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -42,7 +71,7 @@ isPlayerTurn = False
 
 #variables
 diceResult = 0
-tilesInPlay = {1,2,3,4,5,6,7,8,9}
+tilesInPlay = [9,8,7,6,5,4,3,2,1]
 
 pygame.init()
 
@@ -114,6 +143,11 @@ while not isGameDone:
                 dice.setRolling(False)
                 diceResult += dice.getDiceFace()
             dice_result = msg_font.render(f"{diceResult}", False, BLACK)
+            
+            if checkGameEnd():
+                print("Game ends, call ending function")
+            
+            
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if not isDiceRolling:
@@ -142,11 +176,11 @@ while not isGameDone:
                     # print("same amount")
                     for count, tile in enumerate(tileSelection):
                         tile.setIsUsed(True)
-                        tilesInPlay.discard(tile.getValue())
+                        tilesInPlay.remove(tile.getValue())
                         
                     isPlayerTurn = False
                     diceResult = 0
-                    #print(tilesInPlay)
+                    print(tilesInPlay)
                     
                     
 
