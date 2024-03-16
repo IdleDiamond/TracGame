@@ -20,10 +20,10 @@
 
 import pygame
 from lib.dice import Dice
-from lib.tile import Tile
+from lib.card import Card
 
 
-def checkGameEnd():
+def checkTurnEnd():
     """Checks if with dice result the game is still possible"""
     
     
@@ -40,16 +40,23 @@ def checkGameEnd():
                        2: [{2}],
                        1: [{1}]}
     
-    isGameImpossible = True
+    isTurnImpossible = True
     posList = POSSIBILITY_DICT[diceResult]
     
     
     for count, setPos in enumerate(posList):
         
-        if setPos.issubset(set(tilesInPlay)):
-            isGameImpossible = False
+        if setPos.issubset(set(cardsInPlay)):
+            isTurnImpossible = False
     
-    return isGameImpossible
+    return isTurnImpossible
+
+def popMessageBlock():
+    pass
+
+def turnEnding():
+    pass
+
 
 
 # Define some colors
@@ -71,7 +78,7 @@ isPlayerTurn = False
 
 #variables
 diceResult = 0
-tilesInPlay = [9,8,7,6,5,4,3,2,1]
+cardsInPlay = [9,8,7,6,5,4,3,2,1]
 
 pygame.init()
 
@@ -103,11 +110,11 @@ dice_group = pygame.sprite.Group()
 dice_group.add(Dice(1))
 dice_group.add(Dice(2))
 
-#9 Tiles, create tile group sprite
-tile_group = pygame.sprite.Group()
+#9 Cards, create card group sprite
+card_group = pygame.sprite.Group()
 i = 9
 while i > 0:
-    tile_group.add(Tile(i))
+    card_group.add(Card(i))
     i -= 1
 
 # Used to manage how fast the screen updates
@@ -144,8 +151,8 @@ while not isGameDone:
                 diceResult += dice.getDiceFace()
             dice_result = msg_font.render(f"{diceResult}", False, BLACK)
             
-            if checkGameEnd():
-                print("Game ends, call ending function")
+            if checkTurnEnd():
+                print("Turn ends, call ending function")
             
             
 
@@ -157,30 +164,30 @@ while not isGameDone:
                     pass
 
             if isPlayerTurn:
-                for count, tile in enumerate(tile_group, 1):
-                    if tile.checkCollision(pygame.mouse.get_pos()):
-                        tile.isClicked()
+                for count, card in enumerate(card_group, 1):
+                    if card.checkCollision(pygame.mouse.get_pos()):
+                        card.isClicked()
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
             if isPlayerTurn:
-                tileSelection = []
+                cardSelection = []
                 sumSelected = 0
-                for count, tile in enumerate(tile_group):
-                    if not tile.getIsUsed():
-                        if (tile.getIsSelected()):
-                            # print(f"Value {tile.getValue()}")
-                            tileSelection.append(tile)
-                            sumSelected += tile.getValue()
+                for count, card in enumerate(card_group):
+                    if not card.getIsUsed():
+                        if (card.getIsSelected()):
+                            # print(f"Value {card.getValue()}")
+                            cardSelection.append(card)
+                            sumSelected += card.getValue()
                 
                 if sumSelected == diceResult:
                     # print("same amount")
-                    for count, tile in enumerate(tileSelection):
-                        tile.setIsUsed(True)
-                        tilesInPlay.remove(tile.getValue())
+                    for count, card in enumerate(cardSelection):
+                        card.setIsUsed(True)
+                        cardsInPlay.remove(card.getValue())
                         
                     isPlayerTurn = False
                     diceResult = 0
-                    print(tilesInPlay)
+                    print(cardsInPlay)
                     
                     
 
@@ -190,9 +197,9 @@ while not isGameDone:
 
 
     dice_group.update()
-    tile_group.update()
+    card_group.update()
     dice_group.draw(screen)
-    tile_group.draw(screen)
+    card_group.draw(screen)
     screen.blit(msg_block, msg_block_rect)
     screen.blit(info_box,info_box_rect)
     if isFirstRoll:
