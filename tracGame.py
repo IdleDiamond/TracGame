@@ -6,12 +6,12 @@
  @author: joaking
 
  Pygame base template for opening a window
- 
+
  Sample Python/Pygame Programs
  Simpson College Computer Science
  http://programarcadegames.com/
  http://simpson.edu/computer-science/
- 
+
  Explanation video: http://youtu.be/vRB_983kUMc
 """
 
@@ -25,8 +25,8 @@ from lib.card import Card
 
 def checkTurnEnd():
     """Checks if with dice result the game is still possible"""
-    
-    
+
+
     POSSIBILITY_DICT = {12: [{9,3}, {9,2,1}, {8,4}, {8,3,1}, {7,5}, {7,3,2}, {7,4,1}, {6,5,1}, {6,4,2}, {6,3,2,1}, {5,4,3}],
                        11: [{9,2}, {8,3}, {8,2,1}, {7,4}, {7,3,1}, {6,5}, {6,4,1}, {6,3,2}, {5,4,2}, {5,3,2,1}],
                        10: [{9,1}, {8,2}, {7,3}, {7,2,1}, {6,4}, {6,3,1}, {5,4,1}, {5,3,2}, {4,3,2,1}],
@@ -39,16 +39,16 @@ def checkTurnEnd():
                        3: [{3}, {2,1}],
                        2: [{2}],
                        1: [{1}]}
-    
+
     isTurnImpossible = True
     posList = POSSIBILITY_DICT[diceResult]
-    
-    
-    for count, setPos in enumerate(posList):
-        
+
+
+    for countT, setPos in enumerate(posList):
+
         if setPos.issubset(set(cardsInPlay)):
             isTurnImpossible = False
-    
+
     return isTurnImpossible
 
 def popMessageBlock():
@@ -150,11 +150,11 @@ while not isGameDone:
                 dice.setRolling(False)
                 diceResult += dice.getDiceFace()
             dice_result = msg_font.render(f"{diceResult}", False, BLACK)
-            
+
             if checkTurnEnd():
                 print("Turn ends, call ending function")
-            
-            
+
+
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if not isDiceRolling:
@@ -178,18 +178,18 @@ while not isGameDone:
                             # print(f"Value {card.getValue()}")
                             cardSelection.append(card)
                             sumSelected += card.getValue()
-                
+
                 if sumSelected == diceResult:
                     # print("same amount")
                     for count, card in enumerate(cardSelection):
                         card.setIsUsed(True)
                         cardsInPlay.remove(card.getValue())
-                        
+
                     isPlayerTurn = False
                     diceResult = 0
                     print(cardsInPlay)
-                    
-                    
+
+
 
 
     #table background

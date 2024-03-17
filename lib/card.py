@@ -21,9 +21,9 @@ class Card(pygame.sprite.Sprite):
         self.value = value
         self.isSelected = False
         self.isUsed = False
-        card = pygame.image.load(f'art/{value}.png').convert_alpha()
-        card_selected = pygame.image.load(f'art/{value}sel.png').convert_alpha()
-        card_used = pygame.image.load('art/used.png').convert_alpha()
+        card = pygame.image.load(f'art/cards/{value}.png').convert_alpha()
+        card_selected = pygame.image.load(f'art/cards/{value}sel.png').convert_alpha()
+        card_used = pygame.image.load('art/cards/used.png').convert_alpha()
         self.card_frame = (card, card_selected, card_used)
         self.image = self.card_frame[0]
         cardIndex = 10-value
@@ -47,7 +47,7 @@ class Card(pygame.sprite.Sprite):
 
     def getIsUsed(self):
         return self.isUsed
-    
+
     def setIsUsed(self, value):
         self.isUsed = value
 
@@ -67,4 +67,3 @@ class Card(pygame.sprite.Sprite):
 
     def update(self):
         self.cardAnimation()
-        

@@ -23,12 +23,12 @@ DICES_Y = 410
 class Dice(pygame.sprite.Sprite):
     def __init__(self, diceNumber):
         super().__init__()
-        dice_1 = pygame.image.load('art/dice_1.png').convert_alpha()
-        dice_2 = pygame.image.load('art/dice_2.png').convert_alpha()
-        dice_3 = pygame.image.load('art/dice_3.png').convert_alpha()
-        dice_4 = pygame.image.load('art/dice_4.png').convert_alpha()
-        dice_5 = pygame.image.load('art/dice_5.png').convert_alpha()
-        dice_6 = pygame.image.load('art/dice_6.png').convert_alpha()
+        dice_1 = pygame.image.load('art/dice/dice_1.png').convert_alpha()
+        dice_2 = pygame.image.load('art/dice/dice_2.png').convert_alpha()
+        dice_3 = pygame.image.load('art/dice/dice_3.png').convert_alpha()
+        dice_4 = pygame.image.load('art/dice/dice_4.png').convert_alpha()
+        dice_5 = pygame.image.load('art/dice/dice_5.png').convert_alpha()
+        dice_6 = pygame.image.load('art/dice/dice_6.png').convert_alpha()
 
         self.diceFace = 0
         self.diceNumber = diceNumber
