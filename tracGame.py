@@ -55,7 +55,19 @@ def popMessageBlock():
     pass
 
 def turnEnding():
-    pass
+
+    turnScore = 0
+
+    for count, card in enumerate(cardsInPlay):
+        turnScore += card
+
+    for count, card in enumerate(card_group):
+        card.setIsUsed(False)
+        card.setIsSelected(False)
+
+    cardsInPlay.clear()
+
+    return turnScore
 
 
 
@@ -103,8 +115,8 @@ roll_msg = msg_font.render("Press space to roll dices", False, BLACK)
 roll_msg_rect = roll_msg.get_rect(topleft = MSG_POS_XY)
 msg_block = pygame.image.load("art/msg_block.png").convert_alpha()
 msg_block_rect = msg_block.get_rect(topleft = MSG_BLOCK_XY)
-dice_result = msg_font.render(f"{diceResult}", False, BLACK)
-dice_result_rect = dice_result.get_rect(topleft = MSG_POS_XY)
+msg_dice_result = msg_font.render(f"{diceResult}", False, BLACK)
+msg_dice_result_rect = msg_dice_result.get_rect(topleft = MSG_POS_XY)
 
 #Groups dice
 dice_group = pygame.sprite.Group()
@@ -123,7 +135,9 @@ clock = pygame.time.Clock()
 
 rollTimer = pygame.USEREVENT + 1
 
-# -------- Main Program Loop -----------
+
+
+# -------- Main Program Loop ---------------------
 while not isGameDone:
     # --- Main event loop
     for event in pygame.event.get():
@@ -150,10 +164,22 @@ while not isGameDone:
             for dice in dice_group:
                 dice.setRolling(False)
                 diceResult += dice.getDiceFace()
-            dice_result = msg_font.render(f"{diceResult}", False, BLACK)
+
+            # msg_dice_result = msg_font.render(f"{diceResult}", False, BLACK)
 
             if checkTurnEnd():
-                print("Turn ends, call ending function")
+                playerScore += turnEnding()
+                print(playerScore)
+                cardsInPlay = [9,8,7,6,5,4,3,2,1]
+                isPlayerTurn = False
+                msg_dice_result = msg_font.render("", False, BLACK)
+                diceResult = 0
+
+                if playerScore >= 51:
+                    print("Game end")
+                    playerScore = 0
+            else:
+                msg_dice_result = msg_font.render(f"{diceResult}", False, BLACK)
 
 
 
@@ -206,8 +232,8 @@ while not isGameDone:
     if isFirstRoll:
         screen.blit(roll_msg, roll_msg_rect)
     if diceResult != 0:
-        dice_result_rect = dice_result.get_rect(topleft = MSG_POS_XY)
-        screen.blit(dice_result, dice_result_rect)
+        msg_dice_result_rect = msg_dice_result.get_rect(topleft = MSG_POS_XY)
+        screen.blit(msg_dice_result, msg_dice_result_rect)
 
 
     # --- Drawing code should go here

@@ -49,11 +49,11 @@ class Dice(pygame.sprite.Sprite):
         #Result from rolling the diec
         self.diceFace = randint(0,5)
 
-    def player_event(self):
-        pass
-
     def getDiceFace(self):
         return self.diceFace + 1
+
+    def setDiceFace(self, value):
+        self.diceFace = value - 1
 
     def dice_animation(self):
         if self.isRolling:
@@ -72,5 +72,4 @@ class Dice(pygame.sprite.Sprite):
         return self.diceNumber
 
     def update(self):
-        self.player_event()
         self.dice_animation()
