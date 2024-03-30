@@ -13,7 +13,7 @@ Card pixelart from Andrew Tidey andrewtidey.blogspot.co.uk
 import pygame
 
 CARD_X_POS = 21
-CARD_Y_POS = 180
+CARD_Y_POS = 190
 
 class Card(pygame.sprite.Sprite):
     def __init__(self, value):

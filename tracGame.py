@@ -21,6 +21,7 @@
 import pygame
 from lib.dice import Dice
 from lib.card import Card
+from lib.player import Player
 
 
 def checkTurnEnd():
@@ -51,9 +52,6 @@ def checkTurnEnd():
 
     return isTurnImpossible
 
-def popMessageBlock():
-    pass
-
 def turnEnding():
 
     turnScore = 0
@@ -68,6 +66,9 @@ def turnEnding():
     cardsInPlay.clear()
 
     return turnScore
+
+def popMessageBlock():
+    pass
 
 
 
@@ -91,12 +92,13 @@ isPlayerTurn = False
 #variables
 diceResult = 0
 cardsInPlay = [9,8,7,6,5,4,3,2,1]
-playerScore = 0
+playerScores = []
 
 pygame.init()
 
 #title_font = pygame.font.Font(None, 80)
 msg_font = pygame.font.SysFont("garamond", 28)
+score_font = pygame.font.Font('font/Pixeltype.ttf', 80)
 
 
 # Set the width and height of the screen [width, height]
@@ -123,6 +125,21 @@ dice_group = pygame.sprite.Group()
 dice_group.add(Dice(1))
 dice_group.add(Dice(2))
 
+#Group player
+player_group = pygame.sprite.Group()
+player_group.add(Player(1))
+playerScores.append(0)
+player_group.add(Player(2))
+playerScores.append(0)
+# player_group.add(Player(3))
+# playerScores.append(0)
+# player_group.add(Player(4))
+# playerScores.append(0)
+# player_group.add(Player(5))
+# playerScores.append(0)
+# player_group.add(Player(6))
+# playerScores.append(0)
+
 #9 Cards, create card group sprite
 card_group = pygame.sprite.Group()
 i = 9
@@ -136,6 +153,9 @@ clock = pygame.time.Clock()
 rollTimer = pygame.USEREVENT + 1
 
 
+listPlayer = iter(player_group)
+currPlayer = next(listPlayer)
+currPlayer.activate()
 
 # -------- Main Program Loop ---------------------
 while not isGameDone:
@@ -168,16 +188,29 @@ while not isGameDone:
             # msg_dice_result = msg_font.render(f"{diceResult}", False, BLACK)
 
             if checkTurnEnd():
-                playerScore += turnEnding()
-                print(playerScore)
+
+                currPlayer.addScore(turnEnding())
+                print(currPlayer.getScore())
+                playerScores[currPlayer.getPlayerNumber() -1] = currPlayer.getScore()
                 cardsInPlay = [9,8,7,6,5,4,3,2,1]
                 isPlayerTurn = False
                 msg_dice_result = msg_font.render("", False, BLACK)
                 diceResult = 0
 
-                if playerScore >= 51:
+                if currPlayer.getScore() >= 51:
                     print("Game end")
-                    playerScore = 0
+
+                currPlayer.deactivate()
+
+                try:
+                    currPlayer = next(listPlayer)
+
+                except StopIteration:
+                    listPlayer = iter(player_group)
+                    currPlayer = next(listPlayer)
+
+                currPlayer.activate()
+
             else:
                 msg_dice_result = msg_font.render(f"{diceResult}", False, BLACK)
 
@@ -196,7 +229,7 @@ while not isGameDone:
                         card.isClicked()
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-            if isPlayerTurn:
+            if isPlayerTurn and not isDiceRolling:
                 cardSelection = []
                 sumSelected = 0
                 for count, card in enumerate(card_group):
@@ -218,6 +251,7 @@ while not isGameDone:
 
 
 
+    # --- Drawing code should go here
 
     #table background
     screen.blit(bg_surf, (0,0))
@@ -225,18 +259,25 @@ while not isGameDone:
 
     dice_group.update()
     card_group.update()
+    player_group.update()
     dice_group.draw(screen)
     card_group.draw(screen)
+    player_group.draw(screen)
+
+    for countS, score in enumerate(playerScores):
+        score_surf = score_font.render(f'{score}',False,(200,200,0))
+        score_rect = score_surf.get_rect(center = (100 + (155 * countS), 85))
+        screen.blit(score_surf,score_rect)
+
     screen.blit(msg_block, msg_block_rect)
     screen.blit(info_box,info_box_rect)
+
     if isFirstRoll:
         screen.blit(roll_msg, roll_msg_rect)
     if diceResult != 0:
         msg_dice_result_rect = msg_dice_result.get_rect(topleft = MSG_POS_XY)
         screen.blit(msg_dice_result, msg_dice_result_rect)
 
-
-    # --- Drawing code should go here
 
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
