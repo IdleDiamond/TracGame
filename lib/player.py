@@ -19,6 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
         self.isReducedDice = False
         self.isActivePlayer = False
+        self.isEliminated = False
         playerActive = pygame.image.load(f"art/player/player{self.playerNumber}.png").convert_alpha()
         playerInactive = pygame.image.load(f"art/player/player{self.playerNumber}inactive.png").convert_alpha()
         self.playerFrame = (playerInactive, playerActive)
@@ -37,11 +38,17 @@ class Player(pygame.sprite.Sprite):
     def getIsActivePlayer(self):
         return self.isActivePlayer
 
+    def getIsEliminated(self):
+        return self.isEliminated
+
     def activate(self):
         self.isActivePlayer = True
 
     def deactivate(self):
         self.isActivePlayer = False
+
+    def eliminated(self):
+        self.isEliminated = True
 
     def addScore(self, scoreValue):
         self.score += scoreValue

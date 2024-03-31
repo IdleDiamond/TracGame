@@ -129,8 +129,8 @@ dice_group.add(Dice(2))
 player_group = pygame.sprite.Group()
 player_group.add(Player(1))
 playerScores.append(0)
-player_group.add(Player(2))
-playerScores.append(0)
+# player_group.add(Player(2))
+# playerScores.append(0)
 # player_group.add(Player(3))
 # playerScores.append(0)
 # player_group.add(Player(4))
@@ -198,16 +198,38 @@ while not isGameDone:
                 diceResult = 0
 
                 if currPlayer.getScore() >= 51:
-                    print("Game end")
+                    currPlayer.eliminated()
+                    print(f"Player {currPlayer.getPlayerNumber()} is eliminated")
+                    #Check if there's a winner
+
+                    checkActivePlayer = []
+
+                    for countP, playerRem in enumerate(player_group):
+                        if not playerRem.getIsEliminated():
+                            checkActivePlayer.append(playerRem)
+
+                    if len(checkActivePlayer) == 0:
+                        print("Game over")
+                        isGameDone = True
+                        break
+
+                    elif len(checkActivePlayer) == 1:
+                        print(f"Winner is Player {checkActivePlayer[0].getPlayerNumber()}!!")
+
 
                 currPlayer.deactivate()
 
-                try:
-                    currPlayer = next(listPlayer)
+                # Activate next player that is not eliminated
+                while True:
+                    try:
+                        currPlayer = next(listPlayer)
 
-                except StopIteration:
-                    listPlayer = iter(player_group)
-                    currPlayer = next(listPlayer)
+                    except StopIteration:
+                        listPlayer = iter(player_group)
+                        currPlayer = next(listPlayer)
+
+                    if not currPlayer.getIsEliminated():
+                        break
 
                 currPlayer.activate()
 
