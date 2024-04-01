@@ -9,14 +9,11 @@
 
  Sample Python/Pygame Programs
  Simpson College Computer Science
- http://programarcadegames.com/
- http://simpson.edu/computer-science/
 
- Explanation video: http://youtu.be/vRB_983kUMc
 """
 
-#pylint: disable=invalid-name
-#pylint: disable=no-member
+# pylint: disable=invalid-name
+# pylint: disable=no-member
 
 import pygame
 from lib.dice import Dice
@@ -60,8 +57,8 @@ def turnEnding():
         turnScore += card
 
     for count, card in enumerate(card_group):
-        card.setIsUsed(False)
-        card.setIsSelected(False)
+        card.set_is_used(False)
+        card.set_is_selected(False)
 
     cardsInPlay.clear()
 
@@ -71,19 +68,18 @@ def popMessageBlock():
     pass
 
 
-
 # Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-#Constant position
+# Constant position
 MSG_POS_XY = (380, 335)
 MSG_BLOCK_XY = (350, 325)
 INFO_BOX_XY = (995,30)
 
-#Booleans
+# Booleans
 isFirstRoll = True
 isDiceRolling = False
 isGameDone = False
@@ -129,8 +125,8 @@ dice_group.add(Dice(2))
 player_group = pygame.sprite.Group()
 player_group.add(Player(1))
 playerScores.append(0)
-# player_group.add(Player(2))
-# playerScores.append(0)
+player_group.add(Player(2))
+playerScores.append(0)
 # player_group.add(Player(3))
 # playerScores.append(0)
 # player_group.add(Player(4))
@@ -175,47 +171,47 @@ while not isGameDone:
                     isDiceRolling = True
                     isPlayerTurn = True
                     for dice in dice_group:
-                        dice.setRolling(True)
+                        dice.set_rolling(True)
                         dice.roll()
 
         if event.type == rollTimer:
             #stop rolling dices
             isDiceRolling = False
             for dice in dice_group:
-                dice.setRolling(False)
-                diceResult += dice.getDiceFace()
+                dice.set_rolling(False)
+                diceResult += dice.get_dice_face()
 
             # msg_dice_result = msg_font.render(f"{diceResult}", False, BLACK)
 
             if checkTurnEnd():
 
-                currPlayer.addScore(turnEnding())
-                print(currPlayer.getScore())
-                playerScores[currPlayer.getPlayerNumber() -1] = currPlayer.getScore()
-                cardsInPlay = [9,8,7,6,5,4,3,2,1]
+                currPlayer.add_score(turnEnding())
+                print(currPlayer.get_score())
+                playerScores[currPlayer.get_player_number() -1] = currPlayer.get_score()
+                cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
                 isPlayerTurn = False
                 msg_dice_result = msg_font.render("", False, BLACK)
                 diceResult = 0
 
-                if currPlayer.getScore() >= 51:
+                if currPlayer.get_score() >= 21:
                     currPlayer.eliminated()
-                    print(f"Player {currPlayer.getPlayerNumber()} is eliminated")
-                    #Check if there's a winner
+                    print(f"Player {currPlayer.get_player_number()} is eliminated")
+                    # Check if there's a winner
 
                     checkActivePlayer = []
 
                     for countP, playerRem in enumerate(player_group):
-                        if not playerRem.getIsEliminated():
+                        if not playerRem.get_is_eliminated():
                             checkActivePlayer.append(playerRem)
 
                     if len(checkActivePlayer) == 0:
                         print("Game over")
                         isGameDone = True
+                        # todo ask to replay
                         break
 
                     elif len(checkActivePlayer) == 1:
-                        print(f"Winner is Player {checkActivePlayer[0].getPlayerNumber()}!!")
-
+                        print(f"Winner is Player {checkActivePlayer[0].get_player_number()}!!")
 
                 currPlayer.deactivate()
 
@@ -228,7 +224,7 @@ while not isGameDone:
                         listPlayer = iter(player_group)
                         currPlayer = next(listPlayer)
 
-                    if not currPlayer.getIsEliminated():
+                    if not currPlayer.get_is_eliminated():
                         break
 
                 currPlayer.activate()
@@ -247,25 +243,25 @@ while not isGameDone:
 
             if isPlayerTurn:
                 for count, card in enumerate(card_group, 1):
-                    if card.checkCollision(pygame.mouse.get_pos()):
-                        card.isClicked()
+                    if card.check_collision(pygame.mouse.get_pos()):
+                        card.is_clicked()
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
             if isPlayerTurn and not isDiceRolling:
                 cardSelection = []
                 sumSelected = 0
                 for count, card in enumerate(card_group):
-                    if not card.getIsUsed():
-                        if (card.getIsSelected()):
-                            # print(f"Value {card.getValue()}")
+                    if not card.get_is_used():
+                        if card.get_is_selected():
+                            # print(f"Value {card.get_value()}")
                             cardSelection.append(card)
-                            sumSelected += card.getValue()
+                            sumSelected += card.get_value()
 
                 if sumSelected == diceResult:
                     # print("same amount")
                     for count, card in enumerate(cardSelection):
-                        card.setIsUsed(True)
-                        cardsInPlay.remove(card.getValue())
+                        card.set_is_used(True)
+                        cardsInPlay.remove(card.get_value())
 
                     isPlayerTurn = False
                     diceResult = 0

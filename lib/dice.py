@@ -8,12 +8,10 @@ Created on Tue Feb  6 22:32:42 2024
 Dice pixelart by JamesWhite
 """
 
-#pylint: disable=invalid-name
+# pylint: disable=invalid-name
 
 from random import randint
 import pygame
-
-
 
 FIRST_DICE_X = 160
 SECOND_DICE_X = 220
@@ -21,7 +19,7 @@ DICES_Y = 410
 
 
 class Dice(pygame.sprite.Sprite):
-    def __init__(self, diceNumber):
+    def __init__(self, dice_number):
         super().__init__()
         dice_1 = pygame.image.load('art/dice/dice_1.png').convert_alpha()
         dice_2 = pygame.image.load('art/dice/dice_2.png').convert_alpha()
@@ -31,44 +29,43 @@ class Dice(pygame.sprite.Sprite):
         dice_6 = pygame.image.load('art/dice/dice_6.png').convert_alpha()
 
         self.diceFace = 0
-        self.diceNumber = diceNumber
+        self.diceNumber = dice_number
         self.isRolling = False
         self.frames = (dice_1, dice_2, dice_3, dice_4, dice_5, dice_6)
         self.image = self.frames[self.diceFace]
 
-
         if self.diceNumber == 1:
-            self.rect = self.image.get_rect(midbottom = (FIRST_DICE_X, DICES_Y))
+            self.rect = self.image.get_rect(midbottom=(FIRST_DICE_X, DICES_Y))
         else:
-            self.rect = self.image.get_rect(midbottom = (SECOND_DICE_X, DICES_Y))
+            self.rect = self.image.get_rect(midbottom=(SECOND_DICE_X, DICES_Y))
 
     def show(self):
         self.image = self.frames[self.diceFace]
 
     def roll(self):
-        #Result from rolling the diec
-        self.diceFace = randint(0,5)
+        # Result from rolling the dice
+        self.diceFace = randint(0, 5)
 
-    def getDiceFace(self):
+    def get_dice_face(self):
         return self.diceFace + 1
 
-    def setDiceFace(self, value):
+    def set_dice_face(self, value):
         self.diceFace = value - 1
 
     def dice_animation(self):
         if self.isRolling:
-            rolling_face = randint(0,5)
+            rolling_face = randint(0, 5)
             self.image = self.frames[rolling_face]
         else:
             self.show()
 
-    def setRolling(self, rolling):
+    def set_rolling(self, rolling):
         self.isRolling = rolling
 
-    def getIsRolling(self):
+    def get_is_rolling(self):
         return self.isRolling
 
-    def getDiceNumber(self):
+    def get_dice_number(self):
         return self.diceNumber
 
     def update(self):

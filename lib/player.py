@@ -5,6 +5,8 @@ Created on Fri Mar 22 21:50:13 2024
 
 @author: joaking
 
+Player pixelart from "Puddin - 8 Bit Personalized Alphabet (Only Letters)"
+
 """
 
 import pygame
@@ -12,33 +14,35 @@ import pygame
 PLAYER_X_POS = 35
 PLAYER_Y_POS = 30
 
+
 class Player(pygame.sprite.Sprite):
-    def __init__(self, playerNum):
+    def __init__(self, player_num):
         super().__init__()
-        self.playerNumber = playerNum
+        self.playerNumber = player_num
         self.score = 0
         self.isReducedDice = False
         self.isActivePlayer = False
         self.isEliminated = False
-        playerActive = pygame.image.load(f"art/player/player{self.playerNumber}.png").convert_alpha()
-        playerInactive = pygame.image.load(f"art/player/player{self.playerNumber}inactive.png").convert_alpha()
-        self.playerFrame = (playerInactive, playerActive)
+        player_active = pygame.image.load(f"art/player/player{self.playerNumber}.png").convert_alpha()
+        player_inactive = pygame.image.load(f"art/player/player{self.playerNumber}inactive.png").convert_alpha()
+        self.playerFrame = (player_inactive, player_active)
         self.image = self.playerFrame[1]
-        self.rect = self.image.get_rect(midleft = (PLAYER_X_POS + (155 * (self.playerNumber -1 )), PLAYER_Y_POS))
+        self.rect = self.image.get_rect(midleft=(PLAYER_X_POS + (155 * (self.playerNumber - 1)), PLAYER_Y_POS))
 
-    def getPlayerNumber(self):
+    def get_player_number(self):
         return self.playerNumber
 
-    def getScore(self):
+    def get_score(self):
         return self.score
 
-    def getIsReducedDice(self):
+    def get_is_reduced_dice(self):
         return self.isReducedDice
 
-    def getIsActivePlayer(self):
-        return self.isActivePlayer
+    # todo to delete if not used
+    # def getIsActivePlayer(self):
+    #     return self.isActivePlayer
 
-    def getIsEliminated(self):
+    def get_is_eliminated(self):
         return self.isEliminated
 
     def activate(self):
@@ -50,11 +54,9 @@ class Player(pygame.sprite.Sprite):
     def eliminated(self):
         self.isEliminated = True
 
-    def addScore(self, scoreValue):
-        self.score += scoreValue
-
+    def add_score(self, score_value):
+        self.score += score_value
 
     def update(self):
         self.image = self.playerFrame[self.isActivePlayer]
         return
-
