@@ -19,6 +19,7 @@ import pygame
 from lib.dice import Dice
 from lib.card import Card
 from lib.player import Player
+from lib.popup import Popup
 
 
 def check_turn_end():
@@ -90,6 +91,7 @@ isPlayerTurn = False
 diceResult = 0
 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 playerScores = []
+popup = Popup()
 
 pygame.init()
 
@@ -120,6 +122,8 @@ msg_dice_result_rect = msg_dice_result.get_rect(topleft=MSG_POS_XY)
 dice_group = pygame.sprite.Group()
 dice_group.add(Dice(1))
 dice_group.add(Dice(2))
+
+popup.number_players()
 
 # Group player
 player_group = pygame.sprite.Group()
