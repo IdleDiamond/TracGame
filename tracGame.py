@@ -91,7 +91,7 @@ isPlayerTurn = False
 diceResult = 0
 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 playerScores = []
-popup = Popup()
+#popup = Popup()
 
 pygame.init()
 
@@ -123,10 +123,19 @@ dice_group = pygame.sprite.Group()
 dice_group.add(Dice(1))
 dice_group.add(Dice(2))
 
-popup.number_players()
+#Call tk popup to know how many players
+popup = Popup()
+#popup.number_players()
 
 # Group player
 player_group = pygame.sprite.Group()
+
+for p in range(int(popup.nb_player)):
+    player_group.add(Player(p+1))
+    playerScores.append(0)
+
+"""
+#For testing only
 player_group.add(Player(1))
 playerScores.append(0)
 player_group.add(Player(2))
@@ -139,13 +148,13 @@ playerScores.append(0)
 # playerScores.append(0)
 # player_group.add(Player(6))
 # playerScores.append(0)
+"""
 
 # 9 Cards, create card group sprite
 card_group = pygame.sprite.Group()
-i = 9
-while i > 0:
+for i in range(9, 0, -1):
     card_group.add(Card(i))
-    i -= 1
+
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
