@@ -10,7 +10,8 @@ Created on Tue Apr 2 12:21:00 2024
 import tkinter as tk
 from tkinter import ttk
 
-class Popup:
+
+class WindowNbPlayer:
 
     def set_player(self, p_value):
         self.nb_player = p_value
@@ -23,15 +24,14 @@ class Popup:
         self.show_popup()
 
     def show_popup(self):
-
         self.main = tk.Tk()
         width_window = 300
         height_window = 125
         width_monitor = self.main.winfo_screenmmwidth()
         height_monitor = self.main.winfo_screenheight()
 
-        x_win = int((height_monitor/1.35))
-        y_win = int((width_monitor/2) + height_window)
+        x_win = int((height_monitor / 1.35))
+        y_win = int((width_monitor / 2) + height_window)
 
         self.main.geometry(f"{width_window}x{height_window}+{x_win}+{y_win}")
         self.main.overrideredirect(True)
@@ -54,7 +54,7 @@ class Popup:
         combo.set("1")
         combo.pack(padx=10, pady=5)
 
-        tk.Button(self.main, text="Play", command=lambda:
-                    [self.set_player(combo.get()), self.close_popup()]).pack(padx=10, pady=10)
+        tk.Button(self.main, text="Play", command=lambda: [self.set_player(combo.get()),
+                                                           self.close_popup()]).pack(padx=10, pady=10)
 
         self.main.mainloop()

@@ -19,7 +19,7 @@ import pygame
 from lib.dice import Dice
 from lib.card import Card
 from lib.player import Player
-from lib.popup import Popup
+from lib.popup import WindowNbPlayer
 
 
 def check_turn_end():
@@ -124,13 +124,12 @@ dice_group.add(Dice(1))
 dice_group.add(Dice(2))
 
 #Call tk popup to know how many players
-popup = Popup()
-#popup.number_players()
+windowNbPlayer = WindowNbPlayer()
 
 # Group player
 player_group = pygame.sprite.Group()
 
-for p in range(int(popup.nb_player)):
+for p in range(int(windowNbPlayer.nb_player)):
     player_group.add(Player(p+1))
     playerScores.append(0)
 
