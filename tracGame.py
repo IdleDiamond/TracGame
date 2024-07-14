@@ -19,7 +19,7 @@ import pygame
 from lib.dice import Dice
 from lib.card import Card
 from lib.player import Player
-from lib.popup import WindowNbPlayer
+from lib.windowNbPlayer import WindowNbPlayer
 
 
 def check_turn_end():
