@@ -91,7 +91,6 @@ isPlayerTurn = False
 diceResult = 0
 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 playerScores = []
-#popup = Popup()
 
 pygame.init()
 
@@ -123,7 +122,7 @@ dice_group = pygame.sprite.Group()
 dice_group.add(Dice(1))
 dice_group.add(Dice(2))
 
-#Call tk popup to know how many players
+# Call tk popup to know how many players
 windowNbPlayer = WindowNbPlayer()
 
 # Group player
