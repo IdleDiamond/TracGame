@@ -24,7 +24,7 @@ from lib.windowNbPlayer import WindowNbPlayer
 
 
 def check_turn_end():
-    """Checks if with dice result the game is still possible"""
+    # Checks if with dice result the game is still possible
 
     POSSIBILITY_DICT = {12: [{9, 3}, {9, 2, 1}, {8, 4}, {8, 3, 1}, {7, 5}, {7, 3, 2}, {7, 4, 1}, {6, 5, 1}, {6, 4, 2},
                              {6, 3, 2, 1}, {5, 4, 3}],
@@ -66,47 +66,6 @@ def turn_ending_get_score():
 
     return turn_score
 
-'''
-def turn_ending_elimination(cPlayer, lPlayer):
-
-    if cPlayer.get_score() >= 41:
-        cPlayer.eliminated()
-        print(f"Player {cPlayer.get_player_number()} is eliminated")
-
-        checkActivePlayer = []
-
-        # Check if there's a winner
-        for countP, playerRem in enumerate(player_group):
-            if not playerRem.get_is_eliminated():
-                checkActivePlayer.append(playerRem)
-
-        if len(checkActivePlayer) == 0:
-            print("Game over")
-            isGameDone = True
-            # todo ask to replay
-            #break
-
-        elif len(checkActivePlayer) == 1:
-            print(f"Winner is Player {checkActivePlayer[0].get_player_number()}!!")
-
-    cPlayer.deactivate()
-
-    # Activate next player that is not eliminated
-    while True:
-        try:
-            cPlayer = next(lPlayer)
-
-        except StopIteration:
-            lPlayer = iter(player_group)
-            cPlayer = next(lPlayer)
-
-        if not cPlayer.get_is_eliminated():
-            break
-
-    cPlayer.activate()
-    return cPlayer
-'''
-
 
 # Define message constants
 MSG_TYPE = types.SimpleNamespace()
@@ -139,6 +98,7 @@ isPerfectTurn = False
 msgToDisplay = MSG_TYPE.SPACE_ROLL_DICE
 diceResult = 0
 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+# Used for perfect turn: diceResTest[]
 diceResTest = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 playerScores = []
 
@@ -245,8 +205,10 @@ while not isGameDone:
                 dice.set_rolling(False)
                 diceResult += dice.get_dice_face()
 
-            if diceResTest:
-                diceResult = diceResTest.pop()
+            # Block used to create perfect turn
+            # if diceResTest:
+            #     diceResult = diceResTest.pop()
+
 
             msgToDisplay = MSG_TYPE.DICE_RESULT
 
@@ -260,29 +222,11 @@ while not isGameDone:
                 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 
                 print(currPlayer.get_score())
-                # currentTurnScore = 0
-                '''
-                # todo this should be check when pressing Enter
-                if currentTurnScore == 0:
-                    isPerfectTurn = True
-                    msgToDisplay = MSG_TYPE.PERFECT_TURN
-                    pygame.time.set_timer(perfectTurnTimer, 6000, 1)
-                '''
 
                 msgToDisplay = MSG_TYPE.SPACE_ROLL_DICE
                 isPlayerTurn = False
 
-                # todo check this??
-                # currPlayer = turn_ending_elimination(currPlayer, listPlayer)
-
-                # playerScores[currPlayer.get_player_number() - 1] = currPlayer.get_score()
-                # cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
-                # todo check if this line is needed?
-                # msg_dice_result = msg_font.render("", False, BLACK)
-                # diceResult = 0
-
-
-                # todo 21 just for testing
+                # todo 31 just for testing
                 if currPlayer.get_score() >= 31:
                     currPlayer.eliminated()
                     print(f"Player {currPlayer.get_player_number()} is eliminated")
@@ -319,56 +263,12 @@ while not isGameDone:
 
                 currPlayer.activate()
 
-
-            # else:
-                # todo check if this line is needed?
-                # msg_dice_result = msg_font.render(f"{diceResult}", False, BLACK)
-
         if event.type == perfectTurnTimer:
 
             isPerfectTurn = False
             msgToDisplay = MSG_TYPE.PRESS_TO_CONTINUE
             isPlayerTurn = False
             pygame.time.set_timer(rollTimer, 1, 1)
-
-            '''
-            # todo 21 just for testing
-            if currPlayer.get_score() >= 31:
-                currPlayer.eliminated()
-                print(f"Player {currPlayer.get_player_number()} is eliminated")
-
-                # Check if there's a winner
-                checkActivePlayer = []
-
-                for countP, playerRem in enumerate(player_group):
-                    if not playerRem.get_is_eliminated():
-                        checkActivePlayer.append(playerRem)
-
-                if len(checkActivePlayer) == 0:
-                    print("Game over")
-                    isGameDone = True
-                    # todo ask to replay
-                    break
-
-                elif len(checkActivePlayer) == 1:
-                    print(f"Winner is Player {checkActivePlayer[0].get_player_number()}!!")
-
-            currPlayer.deactivate()
-
-            # Activate next player that is not eliminated
-            while True:
-                try:
-                    currPlayer = next(listPlayer)
-
-                except StopIteration:
-                    listPlayer = iter(player_group)
-                    currPlayer = next(listPlayer)
-
-                if not currPlayer.get_is_eliminated():
-                    break
-
-            currPlayer.activate()
-            '''
 
         if event.type == pygame.MOUSEBUTTONDOWN and not isPerfectTurn:
             if not isDiceRolling:
@@ -431,19 +331,6 @@ while not isGameDone:
 
     screen.blit(msg_blue_block, msg_blue_block_rect)
     screen.blit(info_box, info_box_rect)
-
-    """
-    if isFirstRoll:
-        screen.blit(roll_msg, roll_msg_rect)
-    
-    """
-
-    """
-    if diceResult != 0 and not isPerfectTurn:
-        msgToDisplay = MSG_TYPE.DICE_RESULT
-        # msg_dice_result_rect = msg_dice_result.get_rect(topleft=MSG_POS_XY)
-        # screen.blit(msg_dice_result, msg_dice_result_rect)
-    """
 
     match msgToDisplay:
         case MSG_TYPE.NO_MSG:
