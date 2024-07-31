@@ -25,6 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.isEliminated = False
         player_active = pygame.image.load(f"art/player/player{self.playerNumber}.png").convert_alpha()
         player_inactive = pygame.image.load(f"art/player/player{self.playerNumber}inactive.png").convert_alpha()
+        # todo add pixelart for eliminated
         self.playerFrame = (player_inactive, player_active)
         self.image = self.playerFrame[1]
         self.rect = self.image.get_rect(midleft=(PLAYER_X_POS + (155 * (self.playerNumber - 1)), PLAYER_Y_POS))
