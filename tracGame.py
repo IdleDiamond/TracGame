@@ -98,9 +98,10 @@ isPerfectTurn = False
 msgToDisplay = MSG_TYPE.SPACE_ROLL_DICE
 diceResult = 0
 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+playerScores = []
 # Used for perfect turn: diceResTest[]
 diceResTest = [9, 8, 7, 6, 5, 4, 3, 2, 1]
-playerScores = []
+
 
 pygame.init()
 
@@ -119,13 +120,9 @@ bg_surf = pygame.transform.smoothscale(bg_surf, size)
 info_box = pygame.image.load("art/info_box.png").convert_alpha()
 info_box_rect = info_box.get_rect(center=INFO_BOX_XY)
 
-# Game screen
-# roll_msg = msg_font.render("Press space to roll dices", False, BLACK)
-# roll_msg_rect = roll_msg.get_rect(topleft=MSG_POS_XY)
+# Game blue message board
 msg_blue_block = pygame.image.load("art/msg_block.png").convert_alpha()
 msg_blue_block_rect = msg_blue_block.get_rect(topleft=MSG_BLOCK_XY)
-# msg_dice_result = msg_font.render(f"{diceResult}", False, BLACK)
-# msg_dice_result_rect = msg_dice_result.get_rect(topleft=MSG_POS_XY)
 
 # Groups dice
 dice_group = pygame.sprite.Group()
@@ -209,13 +206,10 @@ while not isGameDone:
             # if diceResTest:
             #     diceResult = diceResTest.pop()
 
-
             msgToDisplay = MSG_TYPE.DICE_RESULT
 
             if check_turn_end():
 
-                # todo check for perfect turn here to avoid error?
-                # if not isPerfectTurn:
                 currentTurnScore = turn_ending_get_score()
                 currPlayer.add_score(currentTurnScore)
                 playerScores[currPlayer.get_player_number() - 1] = currPlayer.get_score()
@@ -324,34 +318,34 @@ while not isGameDone:
     card_group.draw(screen)
     player_group.draw(screen)
 
+    # Display player score on board
     for countS, score in enumerate(playerScores):
         score_surf = score_font.render(f'{score}', False, (200, 200, 0))
         score_rect = score_surf.get_rect(center=(100 + (155 * countS), 85))
         screen.blit(score_surf, score_rect)
 
-    screen.blit(msg_blue_block, msg_blue_block_rect)
-    screen.blit(info_box, info_box_rect)
-
     match msgToDisplay:
         case MSG_TYPE.NO_MSG:
             pass
         case MSG_TYPE.SPACE_ROLL_DICE:
-            roll_msg = msg_font.render(f"Player {currPlayer.get_player_number()} press space to roll dices", False, BLACK)
-            roll_msg_rect = roll_msg.get_rect(topleft=MSG_POS_XY)
-            screen.blit(roll_msg, roll_msg_rect)
+            msg_board = msg_font.render(f"Player {currPlayer.get_player_number()} press space to roll dices", False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
         case MSG_TYPE.DICE_RESULT:
-            msg_dice_result = msg_font.render(f"{diceResult}", False, BLACK)
-            msg_dice_result_rect = msg_dice_result.get_rect(topleft=MSG_POS_XY)
-            screen.blit(msg_dice_result, msg_dice_result_rect)
+            msg_board = msg_font.render(f"{diceResult}", False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
         case MSG_TYPE.PERFECT_TURN:
-            msg_dice_result = msg_font.render(f"Perfect Turn from player {currPlayer.get_player_number()}", False, BLACK)
-            msg_dice_result_rect = msg_dice_result.get_rect(topleft=MSG_POS_XY)
-            screen.blit(msg_dice_result, msg_dice_result_rect)
+            msg_board = msg_font.render(f"Perfect Turn from player {currPlayer.get_player_number()}", False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
         case MSG_TYPE.PRESS_TO_CONTINUE:
-            msg_dice_result = msg_font.render("Press space to continue", False, BLACK)
-            msg_dice_result_rect = msg_dice_result.get_rect(topleft=MSG_POS_XY)
-            screen.blit(msg_dice_result, msg_dice_result_rect)
-        case MSG_TYPE.PERFECT_GAME: pass
+            msg_board = msg_font.render("Press space to continue", False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
+        case MSG_TYPE.PERFECT_GAME:
+            pass
+
+    # Display msg board, info box and message on board
+    screen.blit(msg_blue_block, msg_blue_block_rect)
+    screen.blit(info_box, info_box_rect)
+    screen.blit(msg_board, msg_board_rect)
 
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
