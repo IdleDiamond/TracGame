@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
 
     ACTIVE = 0
     INACTIVE = 1
-    ELIMINATED = 3
+    ELIMINATED = 2
 
     def __init__(self, player_num):
         super().__init__()
