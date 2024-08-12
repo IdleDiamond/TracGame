@@ -212,24 +212,24 @@ while not isGameDone:
 
                 currentTurnScore = turn_ending_get_score()
                 currPlayer.add_score(currentTurnScore)
-                playerScores[currPlayer.get_player_number() - 1] = currPlayer.get_score()
+                playerScores[currPlayer.playerNumber - 1] = currPlayer.score
                 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 
-                print(currPlayer.get_score())
+                print(currPlayer.score)
 
                 msgToDisplay = MSG_TYPE.SPACE_ROLL_DICE
                 isPlayerTurn = False
 
                 # todo 31 just for testing
-                if currPlayer.get_score() >= 31:
+                if currPlayer.score >= 31:
                     currPlayer.eliminated()
-                    print(f"Player {currPlayer.get_player_number()} is eliminated")
+                    print(f"Player {currPlayer.playerNumber} is eliminated")
 
                     checkActivePlayer = []
 
                     # Check if there's a winner
                     for countP, playerRem in enumerate(player_group):
-                        if not playerRem.get_is_eliminated():
+                        if not playerRem.isEliminated:
                             checkActivePlayer.append(playerRem)
 
                     if len(checkActivePlayer) == 0:
@@ -239,7 +239,7 @@ while not isGameDone:
                         break
 
                     elif len(checkActivePlayer) == 1:
-                        print(f"Winner is Player {checkActivePlayer[0].get_player_number()}!!")
+                        print(f"Winner is Player {checkActivePlayer[0].playerNumber}!!")
 
                 currPlayer.deactivate()
 
@@ -252,7 +252,7 @@ while not isGameDone:
                         listPlayer = iter(player_group)
                         currPlayer = next(listPlayer)
 
-                    if not currPlayer.get_is_eliminated():
+                    if not currPlayer.isEliminated:
                         break
 
                 currPlayer.activate()
@@ -328,13 +328,14 @@ while not isGameDone:
         case MSG_TYPE.NO_MSG:
             pass
         case MSG_TYPE.SPACE_ROLL_DICE:
-            msg_board = msg_font.render(f"Player {currPlayer.get_player_number()} press space to roll dices", False, BLACK)
+            msg_board = msg_font.render(f"Player {currPlayer.playerNumber} press space to roll dices",
+                                        False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
         case MSG_TYPE.DICE_RESULT:
             msg_board = msg_font.render(f"{diceResult}", False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
         case MSG_TYPE.PERFECT_TURN:
-            msg_board = msg_font.render(f"Perfect Turn from player {currPlayer.get_player_number()}", False, BLACK)
+            msg_board = msg_font.render(f"Perfect Turn from player {currPlayer.playerNumber}", False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
         case MSG_TYPE.PRESS_TO_CONTINUE:
             msg_board = msg_font.render("Press space to continue", False, BLACK)

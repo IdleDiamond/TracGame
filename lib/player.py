@@ -43,21 +43,17 @@ class Player(pygame.sprite.Sprite):
         else:
             return Player.INACTIVE
 
-    def get_player_number(self):
-        return self.playerNumber
-
-    def get_score(self):
-        return self.score
-
-    def get_is_reduced_dice(self):
-        return self.isReducedDice
-
-    # todo to delete if not used
-    #   def getIsActivePlayer(self):
-    #       return self.isActivePlayer
-
-    def get_is_eliminated(self):
-        return self.isEliminated
+    # def get_player_number(self):
+    #     return self.playerNumber
+    #
+    # def get_score(self):
+    #     return self.score
+    #
+    # def get_is_reduced_dice(self):
+    #     return self.isReducedDice
+    #
+    # def get_is_eliminated(self):
+    #     return self.isEliminated
 
     def activate(self):
         self.isActivePlayer = True
