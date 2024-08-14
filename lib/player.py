@@ -22,6 +22,10 @@ class Player(pygame.sprite.Sprite):
     ELIMINATED = 2
 
     def __init__(self, player_num):
+        """ Player instance: Starting frame is "inactive", position is determined using parameter player_num
+
+        @param player_num: Integer
+        """
         super().__init__()
         self.playerNumber = player_num
         self.score = 0
@@ -36,6 +40,10 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midleft=(PLAYER_X_POS + (155 * (self.playerNumber - 1)), PLAYER_Y_POS))
 
     def status(self):
+        """ Will return an int if player is active(0), inactive(1) or eliminate(2)
+
+        @return: Integer
+        """
         if self.isActivePlayer:
             return Player.ACTIVE
         elif self.isEliminated:
@@ -56,17 +64,38 @@ class Player(pygame.sprite.Sprite):
     #     return self.isEliminated
 
     def activate(self):
+        """ This will change the status of the player to active
+
+        @return: None
+        """
         self.isActivePlayer = True
 
     def deactivate(self):
+        """ This will change the status of the player to inactive
+
+        @return: None
+        """
         self.isActivePlayer = False
 
     def eliminated(self):
+        """ This will change the status of the player to eliminated
+
+        @return: None
+        """
         self.isEliminated = True
 
     def add_score(self, score_value):
+        """ Will add value to the current score of the player
+
+        @param score_value: Integer
+        @return: None
+        """
         self.score += score_value
 
     def update(self):
+        """ Will determine the status of the player and pick the correct frame from the playerFrame[]
+        Overrides method in Sprite class
+
+        @return: None
+        """
         self.image = self.playerFrame[self.status()]
-        # return
