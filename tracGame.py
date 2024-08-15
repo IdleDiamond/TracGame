@@ -24,7 +24,10 @@ from lib.windowNbPlayer import WindowNbPlayer
 
 
 def check_turn_end():
-    # Checks if with dice result the game is still possible
+    """ Checks if with dice result the game is still possible
+
+    @return: Boolean
+    """
 
     POSSIBILITY_DICT = {12: [{9, 3}, {9, 2, 1}, {8, 4}, {8, 3, 1}, {7, 5}, {7, 3, 2}, {7, 4, 1}, {6, 5, 1}, {6, 4, 2},
                              {6, 3, 2, 1}, {5, 4, 3}],
@@ -190,7 +193,7 @@ while not isGameDone:
                     isDiceRolling = True
                     isPlayerTurn = True
                     for dice in dice_group:
-                        dice.set_rolling(True)
+                        dice.isRolling = True
                         dice.roll()
 
         if event.type == rollTimer:
@@ -199,8 +202,8 @@ while not isGameDone:
             isDiceRolling = False
             diceResult = 0
             for dice in dice_group:
-                dice.set_rolling(False)
-                diceResult += dice.get_dice_face()
+                dice.isRolling = False
+                diceResult += dice.diceFace
 
             # Block used to create perfect turn
             # if diceResTest:
