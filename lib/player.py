@@ -23,6 +23,15 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, player_num):
         """ Player instance: Starting frame is "inactive", position is determined using parameter player_num
+        Attributes
+        - playerNumber : Integer - Numerical number of player
+        - score : Integer - Player score
+        - isReducedDice : Boolean - if playing with fewer dices
+        - isActivePlayer : Boolean - if player is currently active
+        - isEliminated : Boolean - if player is eliminated from game
+        - playerFrame : List - List of possible images for player (active, inactive, eliminated)
+        - image : Image from Sprite class
+        - rect : Rectangle from Sprite class
 
         @param player_num: Integer
         """

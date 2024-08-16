@@ -22,6 +22,12 @@ class Dice(pygame.sprite.Sprite):
     def __init__(self, dice_number):
         """ Initializes all face images, sets starting face to 1, rolling to False and dice placement on canvas
         is dependent on which dice number it is, either 1 or 2 there's no 3rd dice
+        Attributes
+        - diceFace : Integer - Numerica value of the current face of dice
+        - isRolling : Boolean - if dice is currently rolling
+        - frames : List - List of possible faces of dice (1 to 6)
+        - image : Image from Sprite class
+        - rect : Rectangle from Sprite class
 
         @param dice_number: Number of the actual dice (Not face value)
         """

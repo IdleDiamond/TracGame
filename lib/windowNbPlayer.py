@@ -14,16 +14,34 @@ from tkinter import ttk
 class WindowNbPlayer:
 
     def set_player(self, p_value):
+        """ Set the attribute nb_player, which represents the number of players in the game
+
+        @param p_value: Integer
+        @return: None
+        """
         self.nb_player = p_value
 
     def close_popup(self):
+        """ Closes the window
+
+        @return: None
+        """
         self.main.destroy()
 
     def __init__(self):
+        """ Will initialize minimal number of players to 1 and call show_popup() to show window selection to user
+        Attributes
+        nb_player : Integer - Number of players for game
+
+        """
         self.nb_player = 1
         self.show_popup()
 
     def show_popup(self):
+        """ Will show a window with a drop-down list of 1 to 6 for the user to chose how many player are going to play
+
+        @return: None
+        """
         self.main = tk.Tk()
         width_window = 300
         height_window = 125

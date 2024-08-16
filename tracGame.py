@@ -62,8 +62,8 @@ def turn_ending_get_score():
         turn_score += cardTE1
 
     for countTE2, cardTE2 in enumerate(card_group):
-        cardTE2.set_is_used(False)
-        cardTE2.set_is_selected(False)
+        cardTE2.isUsed = False
+        cardTE2.isSelected = False
 
     cardsInPlay.clear()
 
@@ -278,7 +278,7 @@ while not isGameDone:
             if isPlayerTurn:
                 for count, card in enumerate(card_group, 1):
                     if card.check_collision(pygame.mouse.get_pos()):
-                        card.is_clicked()
+                        card.clicked()
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN and not isPerfectTurn:
 
@@ -286,17 +286,17 @@ while not isGameDone:
                 cardSelection = []
                 sumSelected = 0
                 for count, card in enumerate(card_group):
-                    if not card.get_is_used():
-                        if card.get_is_selected():
+                    if not card.isUsed:
+                        if card.isSelected:
                             # print(f"Value {card.get_value()}")
                             cardSelection.append(card)
-                            sumSelected += card.get_value()
+                            sumSelected += card.value
 
                 if sumSelected == diceResult:
                     # print("same amount")
                     for count, card in enumerate(cardSelection):
-                        card.set_is_used(True)
-                        cardsInPlay.remove(card.get_value())
+                        card.isUsed = True
+                        cardsInPlay.remove(card.value)
 
                     isPlayerTurn = False
                     diceResult = 0
