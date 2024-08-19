@@ -78,6 +78,7 @@ MSG_TYPE.DICE_RESULT = 2
 MSG_TYPE.PERFECT_TURN = 3
 MSG_TYPE.PERFECT_GAME = 4
 MSG_TYPE.PRESS_TO_CONTINUE = 5
+MSG_TYPE.END_TURN = 6
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -99,6 +100,7 @@ isPerfectTurn = False
 
 # variables
 msgToDisplay = MSG_TYPE.SPACE_ROLL_DICE
+previousPlayerNumber = 0
 diceResult = 0
 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 playerScores = []
@@ -220,7 +222,7 @@ while not isGameDone:
 
                 print(currPlayer.score)
 
-                msgToDisplay = MSG_TYPE.SPACE_ROLL_DICE
+                msgToDisplay = MSG_TYPE.END_TURN
                 isPlayerTurn = False
 
                 # todo 31 just for testing
@@ -244,6 +246,7 @@ while not isGameDone:
                     elif len(checkActivePlayer) == 1:
                         print(f"Winner is Player {checkActivePlayer[0].playerNumber}!!")
 
+                previousPlayerNumber = currPlayer.playerNumber
                 currPlayer.deactivate()
 
                 # Activate next player that is not eliminated
@@ -340,11 +343,17 @@ while not isGameDone:
         case MSG_TYPE.PERFECT_TURN:
             msg_board = msg_font.render(f"Perfect Turn from player {currPlayer.playerNumber}", False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
+        case MSG_TYPE.PERFECT_GAME:
+            pass
         case MSG_TYPE.PRESS_TO_CONTINUE:
             msg_board = msg_font.render("Press space to continue", False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
-        case MSG_TYPE.PERFECT_GAME:
+        case MSG_TYPE.END_TURN:
+            msg_board = msg_font.render(f"Dice result: {diceResult}\n End turn of player {previousPlayerNumber},"
+                                        f" Player {currPlayer.playerNumber} press space to roll dices", False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
             pass
+
 
     # Display msg board, info box and message on board
     screen.blit(msg_blue_block, msg_blue_block_rect)
