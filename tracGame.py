@@ -87,7 +87,8 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 # Constant position
-MSG_POS_XY = (380, 335)
+MSG_POS_XY_1st_LINE = (380, 335)
+MSG_POS_XY_2nd_LINE = (380, 365)
 MSG_BLOCK_XY = (350, 325)
 INFO_BOX_XY = (995, 30)
 
@@ -330,35 +331,45 @@ while not isGameDone:
         score_rect = score_surf.get_rect(center=(100 + (155 * countS), 85))
         screen.blit(score_surf, score_rect)
 
+    screen.blit(msg_blue_block, msg_blue_block_rect)
+    screen.blit(info_box, info_box_rect)
+
     match msgToDisplay:
         case MSG_TYPE.NO_MSG:
             pass
         case MSG_TYPE.SPACE_ROLL_DICE:
             msg_board = msg_font.render(f"Player {currPlayer.playerNumber} press space to roll dices",
                                         False, BLACK)
-            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
         case MSG_TYPE.DICE_RESULT:
-            msg_board = msg_font.render(f"{diceResult}", False, BLACK)
-            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
+            msg_board = msg_font.render(f"Dice result: {diceResult}", False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
         case MSG_TYPE.PERFECT_TURN:
-            msg_board = msg_font.render(f"Perfect Turn from player {currPlayer.playerNumber}", False, BLACK)
-            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
+            msg_board = msg_font.render(f"Perfect Turn from player {currPlayer.playerNumber}",
+                                        False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
         case MSG_TYPE.PERFECT_GAME:
             pass
         case MSG_TYPE.PRESS_TO_CONTINUE:
             msg_board = msg_font.render("Press space to continue", False, BLACK)
-            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
         case MSG_TYPE.END_TURN:
-            msg_board = msg_font.render(f"Dice result: {diceResult}\n End turn of player {previousPlayerNumber},"
-                                        f" Player {currPlayer.playerNumber} press space to roll dices", False, BLACK)
-            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY)
+            msg_board = msg_font.render(f"Dice result: {diceResult} - End turn of player {previousPlayerNumber}",
+                                        False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
+            screen.blit(msg_board, msg_board_rect)
+
+            msg_board = msg_font.render(f"Player {currPlayer.playerNumber} press space to roll dices",
+                                        False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_2nd_LINE)
+            screen.blit(msg_board, msg_board_rect)
+
             pass
 
 
     # Display msg board, info box and message on board
-    screen.blit(msg_blue_block, msg_blue_block_rect)
-    screen.blit(info_box, info_box_rect)
-    screen.blit(msg_board, msg_board_rect)
+    if MSG_TYPE != MSG_TYPE.END_TURN:
+        screen.blit(msg_board, msg_board_rect)
 
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
