@@ -55,11 +55,11 @@ def check_turn_end():
     return is_turn_impossible
 
 
-def turn_ending_get_score():
-    turn_score = 0
+def turn_ending_get_penalty():
+    turn_penalty = 0
 
     for countTE1, cardTE1 in enumerate(cardsInPlay):
-        turn_score += cardTE1
+        turn_penalty += cardTE1
 
     for countTE2, cardTE2 in enumerate(card_group):
         cardTE2.isUsed = False
@@ -67,7 +67,7 @@ def turn_ending_get_score():
 
     cardsInPlay.clear()
 
-    return turn_score
+    return turn_penalty
 
 
 # Define message constants
@@ -101,10 +101,10 @@ isPerfectTurn = False
 
 # variables
 msgToDisplay = MSG_TYPE.SPACE_ROLL_DICE
-previousPlayerNumber = 0
+previousPlayerObject = None
 diceResult = 0
 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
-playerScores = []
+playerPenalty = []
 # Used for perfect turn: diceResTest[]
 diceResTest = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 
@@ -113,7 +113,7 @@ pygame.init()
 
 # title_font = pygame.font.Font(None, 80)
 msg_font = pygame.font.SysFont("garamond", 28)
-score_font = pygame.font.Font('font/Pixeltype.ttf', 80)
+penalty_font = pygame.font.Font('font/Pixeltype.ttf', 80)
 
 # Set the width and height of the screen [width, height]
 size = (1025, 500)
@@ -143,7 +143,7 @@ player_group = pygame.sprite.Group()
 
 for p in range(int(windowNbPlayer.nb_player)):
     player_group.add(Player(p+1))
-    playerScores.append(0)
+    playerPenalty.append(0)
 
 """
 #For testing only
@@ -216,18 +216,18 @@ while not isGameDone:
 
             if check_turn_end():
 
-                currentTurnScore = turn_ending_get_score()
-                currPlayer.add_score(currentTurnScore)
-                playerScores[currPlayer.playerNumber - 1] = currPlayer.score
+                currentTurnPenalty = turn_ending_get_penalty()
+                currPlayer.add_penalty(currentTurnPenalty)
+                playerPenalty[currPlayer.playerNumber - 1] = currPlayer.penalty
                 cardsInPlay = [9, 8, 7, 6, 5, 4, 3, 2, 1]
 
-                print(currPlayer.score)
+                print(currPlayer.penalty)
 
                 msgToDisplay = MSG_TYPE.END_TURN
                 isPlayerTurn = False
 
                 # todo 31 just for testing
-                if currPlayer.score >= 31:
+                if currPlayer.penalty >= 31:
                     currPlayer.eliminated()
                     print(f"Player {currPlayer.playerNumber} is eliminated")
 
@@ -247,7 +247,7 @@ while not isGameDone:
                     elif len(checkActivePlayer) == 1:
                         print(f"Winner is Player {checkActivePlayer[0].playerNumber}!!")
 
-                previousPlayerNumber = currPlayer.playerNumber
+                previousPlayerObject = Player.surface_copy_player(currPlayer)
                 currPlayer.deactivate()
 
                 # Activate next player that is not eliminated
@@ -325,11 +325,11 @@ while not isGameDone:
     card_group.draw(screen)
     player_group.draw(screen)
 
-    # Display player score on board
-    for countS, score in enumerate(playerScores):
-        score_surf = score_font.render(f'{score}', False, (200, 200, 0))
-        score_rect = score_surf.get_rect(center=(100 + (155 * countS), 85))
-        screen.blit(score_surf, score_rect)
+    # Display player penalty on board
+    for countS, penalty in enumerate(playerPenalty):
+        penalty_surf = penalty_font.render(f'{penalty}', False, (200, 200, 0))
+        penalty_rect = penalty_surf.get_rect(center=(100 + (155 * countS), 85))
+        screen.blit(penalty_surf, penalty_rect)
 
     screen.blit(msg_blue_block, msg_blue_block_rect)
     screen.blit(info_box, info_box_rect)
@@ -354,7 +354,8 @@ while not isGameDone:
             msg_board = msg_font.render("Press space to continue", False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
         case MSG_TYPE.END_TURN:
-            msg_board = msg_font.render(f"Dice result: {diceResult} - End turn of player {previousPlayerNumber}",
+            # todo continue: use copied player information
+            msg_board = msg_font.render(f"Dice result: {diceResult} - End turn of player {previousPlayerObject.playerNumber}",
                                         False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
             screen.blit(msg_board, msg_board_rect)
@@ -363,8 +364,6 @@ while not isGameDone:
                                         False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_2nd_LINE)
             screen.blit(msg_board, msg_board_rect)
-
-            pass
 
 
     # Display msg board, info box and message on board

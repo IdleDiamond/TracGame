@@ -9,7 +9,7 @@ Player pixelart from "Puddin - 8 Bit Personalized Alphabet (Only Letters)"
 
 """
 
-import pygame
+import pygame, copy
 
 PLAYER_X_POS = 35
 PLAYER_Y_POS = 30
@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         """ Player instance: Starting frame is "inactive", position is determined using parameter player_num
         Attributes
         - playerNumber : Integer - Numerical number of player
-        - score : Integer - Player score
+        - penalty : Integer - Player penalty amount
         - isReducedDice : Boolean - if playing with fewer dices
         - isActivePlayer : Boolean - if player is currently active
         - isEliminated : Boolean - if player is eliminated from game
@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         """
         super().__init__()
         self.playerNumber = player_num
-        self.score = 0
+        self.penalty = 0
         self.isReducedDice = False
         self.isActivePlayer = False
         self.isEliminated = False
@@ -47,6 +47,18 @@ class Player(pygame.sprite.Sprite):
         self.playerFrame = (player_active, player_inactive, player_eliminated)
         self.image = self.playerFrame[1]
         self.rect = self.image.get_rect(midleft=(PLAYER_X_POS + (155 * (self.playerNumber - 1)), PLAYER_Y_POS))
+
+    @classmethod
+    def surface_copy_player(cls, args):
+        """ Will return a copy of received player argument, but only copies the player number and penalty amount
+
+        @param args: Player to copy
+        @return: New player instance (copies only player number and penalty amount)
+        """
+        x = cls(args.playerNumber)
+        x.penalty = args.penalty
+        return x
+
 
     def status(self):
         """ Will return an int if player is active(0), inactive(1) or eliminate(2)
@@ -93,13 +105,13 @@ class Player(pygame.sprite.Sprite):
         """
         self.isEliminated = True
 
-    def add_score(self, score_value):
-        """ Will add value to the current score of the player
+    def add_penalty(self, penalty_amount):
+        """ Will add value to the current penalty of the player
 
-        @param score_value: Integer
+        @param penalty_amount: Integer
         @return: None
         """
-        self.score += score_value
+        self.penalty += penalty_amount
 
     def update(self):
         """ Will determine the status of the player and pick the correct frame from the playerFrame[]
