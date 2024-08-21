@@ -88,7 +88,8 @@ RED = (255, 0, 0)
 
 # Constant position
 MSG_POS_XY_1st_LINE = (380, 335)
-MSG_POS_XY_2nd_LINE = (380, 365)
+MSG_POS_XY_2nd_LINE = (380, 367)
+MSG_POS_XY_3rd_LINE = (380, 399)
 MSG_BLOCK_XY = (350, 325)
 INFO_BOX_XY = (995, 30)
 
@@ -354,15 +355,22 @@ while not isGameDone:
             msg_board = msg_font.render("Press space to continue", False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
         case MSG_TYPE.END_TURN:
-            # todo continue: use copied player information
-            msg_board = msg_font.render(f"Dice result: {diceResult} - End turn of player {previousPlayerObject.playerNumber}",
-                                        False, BLACK)
+            msg_board = msg_font.render(
+                f"Dice result: {diceResult} - Play not possible",
+                False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
             screen.blit(msg_board, msg_board_rect)
 
-            msg_board = msg_font.render(f"Player {currPlayer.playerNumber} press space to roll dices",
-                                        False, BLACK)
+            msg_board = msg_font.render(
+                f"Player {previousPlayerObject.playerNumber} ended turn with penalty of {currentTurnPenalty}",
+                False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_2nd_LINE)
+            screen.blit(msg_board, msg_board_rect)
+
+            msg_board = msg_font.render(
+                f"Player {currPlayer.playerNumber} press space to roll dices",
+                False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_3rd_LINE)
             screen.blit(msg_board, msg_board_rect)
 
 
