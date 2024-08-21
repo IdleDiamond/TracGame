@@ -332,6 +332,7 @@ while not isGameDone:
         penalty_rect = penalty_surf.get_rect(center=(100 + (155 * countS), 85))
         screen.blit(penalty_surf, penalty_rect)
 
+    # Display msg board, info box and message on board
     screen.blit(msg_blue_block, msg_blue_block_rect)
     screen.blit(info_box, info_box_rect)
 
@@ -373,8 +374,6 @@ while not isGameDone:
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_3rd_LINE)
             screen.blit(msg_board, msg_board_rect)
 
-
-    # Display msg board, info box and message on board
     if MSG_TYPE != MSG_TYPE.END_TURN:
         screen.blit(msg_board, msg_board_rect)
 

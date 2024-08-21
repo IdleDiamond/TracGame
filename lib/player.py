@@ -9,7 +9,7 @@ Player pixelart from "Puddin - 8 Bit Personalized Alphabet (Only Letters)"
 
 """
 
-import pygame, copy
+import pygame
 
 PLAYER_X_POS = 35
 PLAYER_Y_POS = 30
