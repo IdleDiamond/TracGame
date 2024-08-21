@@ -200,6 +200,12 @@ while not isGameDone:
                         dice.isRolling = True
                         dice.roll()
 
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and isPerfectTurn:
+            isPerfectTurn = False
+            msgToDisplay = MSG_TYPE.PRESS_TO_CONTINUE
+            isPlayerTurn = False
+            pygame.time.set_timer(rollTimer, 1, 1)
+
         if event.type == rollTimer:
 
             # stop rolling dices
@@ -210,8 +216,8 @@ while not isGameDone:
                 diceResult += dice.diceFace
 
             # Block used to create perfect turn
-            # if diceResTest:
-            #     diceResult = diceResTest.pop()
+            if diceResTest:
+                diceResult = diceResTest.pop()
 
             msgToDisplay = MSG_TYPE.DICE_RESULT
 
@@ -312,7 +318,7 @@ while not isGameDone:
                     if not cardsInPlay:
                         isPerfectTurn = True
                         msgToDisplay = MSG_TYPE.PERFECT_TURN
-                        pygame.time.set_timer(perfectTurnTimer, 4000, 1)
+                        # pygame.time.set_timer(perfectTurnTimer, 4000, 1)
 
     # --- Drawing code should go here
 
@@ -350,6 +356,12 @@ while not isGameDone:
             msg_board = msg_font.render(f"Perfect Turn from player {currPlayer.playerNumber}",
                                         False, BLACK)
             msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_1st_LINE)
+            screen.blit(msg_board, msg_board_rect)
+
+            msg_board = msg_font.render(f"Press space to continue",
+                                        False, BLACK)
+            msg_board_rect = msg_board.get_rect(topleft=MSG_POS_XY_2nd_LINE)
+            screen.blit(msg_board, msg_board_rect)
         case MSG_TYPE.PERFECT_GAME:
             pass
         case MSG_TYPE.PRESS_TO_CONTINUE:
