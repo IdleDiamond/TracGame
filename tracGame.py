@@ -20,6 +20,8 @@ import pygame
 from lib.dice import Dice
 from lib.card import Card
 from lib.player import Player
+from lib.gameCore import GameCore
+
 from lib.windowNbPlayer import WindowNbPlayer
 
 
@@ -131,20 +133,22 @@ info_box_rect = info_box.get_rect(center=INFO_BOX_XY)
 msg_blue_block = pygame.image.load("art/msg_block.png").convert_alpha()
 msg_blue_block_rect = msg_blue_block.get_rect(topleft=MSG_BLOCK_XY)
 
-# Groups dice
-dice_group = pygame.sprite.Group()
-dice_group.add(Dice(1))
-dice_group.add(Dice(2))
-
 # Call tk popup to know how many players
 windowNbPlayer = WindowNbPlayer()
 
-# Group player
-player_group = pygame.sprite.Group()
+core = GameCore(windowNbPlayer)
 
-for p in range(int(windowNbPlayer.nb_player)):
-    player_group.add(Player(p+1))
-    playerPenalty.append(0)
+# Groups dice
+# dice_group = pygame.sprite.Group()
+# dice_group.add(Dice(1))
+# dice_group.add(Dice(2))
+
+# Group player
+# player_group = pygame.sprite.Group()
+#
+# for p in range(int(windowNbPlayer.nb_player)):
+#     player_group.add(Player(p+1))
+#     playerPenalty.append(0)
 
 """
 #For testing only
@@ -163,9 +167,9 @@ playerScores.append(0)
 """
 
 # 9 Cards, create card group sprite
-card_group = pygame.sprite.Group()
-for i in range(9, 0, -1):
-    card_group.add(Card(i))
+# card_group = pygame.sprite.Group()
+# for i in range(9, 0, -1):
+#     card_group.add(Card(i))
 
 
 # Used to manage how fast the screen updates
@@ -175,13 +179,21 @@ clock = pygame.time.Clock()
 rollTimer = pygame.USEREVENT + 1
 perfectTurnTimer = pygame.USEREVENT + 2
 
-listPlayer = iter(player_group)
-currPlayer = next(listPlayer)
-currPlayer.activate()
+# listPlayer = iter(player_group)
+# currPlayer = next(listPlayer)
+# currPlayer.activate()
 
 # -------- Main Program Loop ---------------------
 while not isGameDone:
     # --- Main event loop
+
+    isGameDone = core.process_events()
+
+    core.display_frame(screen)
+
+    clock.tick(60)
+
+    """
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             isGameDone = True
@@ -313,6 +325,7 @@ while not isGameDone:
                         isPerfectTurn = True
                         msgToDisplay = MSG_TYPE.PERFECT_TURN
                         pygame.time.set_timer(perfectTurnTimer, 4000, 1)
+    """
 
     # --- Drawing code should go here
 
@@ -377,14 +390,14 @@ while not isGameDone:
     if MSG_TYPE != MSG_TYPE.END_TURN:
         screen.blit(msg_board, msg_board_rect)
 
-    # --- Go ahead and update the screen with what we've drawn.
-    pygame.display.flip()
-
-    # --- Limit to 60 frames per second
-    clock.tick(60)
-
-    if isGameDone:
-        break
+    # # --- Go ahead and update the screen with what we've drawn.
+    # pygame.display.flip()
+    #
+    # # --- Limit to 60 frames per second
+    # clock.tick(60)
+    #
+    # if isGameDone:
+    #     break
 
 # Close the window and quit.
 pygame.quit()
